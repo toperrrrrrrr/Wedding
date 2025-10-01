@@ -27,28 +27,54 @@
             return video;
         }
 
-        console.log('Video element lost, re-acquiring...');
+        console.log('🔍 Video element validation check...');
 
         // Try to find the video element
-        video = document.getElementById('wedding-video');
+        const foundVideo = document.getElementById('wedding-video');
 
-        if (video) {
-            console.log('✅ Video element re-acquired successfully');
-            // Verify it's a proper video element
-            if (video.tagName !== 'VIDEO') {
-                console.warn('⚠️ Found element with ID "wedding-video" but it\'s not a VIDEO element:', video.tagName);
-                return null;
+        if (foundVideo && foundVideo.tagName === 'VIDEO') {
+            console.log('✅ Video element found and valid');
+            video = foundVideo;
+
+            // Ensure video element is properly configured when re-acquired
+            try {
+                // Set default properties if they're missing
+                if (video.muted === undefined) video.muted = true;
+                if (video.volume === undefined) video.volume = 0.01;
+                if (video.preload === undefined) video.preload = 'metadata';
+            } catch (error) {
+                console.warn('⚠️ Could not configure re-acquired video element:', error.message);
             }
+
+            return video;
+        }
+
+        if (foundVideo) {
+            console.warn('⚠️ Element with ID "wedding-video" exists but is not a VIDEO element:', foundVideo.tagName);
         } else {
-            console.warn('❌ Video element not found in DOM');
+            console.warn('❌ Video element with ID "wedding-video" not found');
 
             // Try to find any video element as fallback
             const allVideos = document.querySelectorAll('video');
             if (allVideos.length > 0) {
-                console.log('🔄 Found', allVideos.length, 'video elements, using first one');
+                console.log('🔄 Using fallback video element (found', allVideos.length, 'total)');
                 video = allVideos[0];
+
+                // If we found a different video element, log it for debugging
+                if (video.id !== 'wedding-video') {
+                    console.log('📋 Using video element with ID:', video.id || 'no-id');
+                }
+
+                // Ensure fallback video element is properly configured
+                try {
+                    if (video.muted === undefined) video.muted = true;
+                    if (video.volume === undefined) video.volume = 0.01;
+                    if (video.preload === undefined) video.preload = 'metadata';
+                } catch (error) {
+                    console.warn('⚠️ Could not configure fallback video element:', error.message);
+                }
             } else {
-                console.warn('❌ No video elements found in DOM');
+                console.error('❌ No video elements found in entire DOM');
                 return null;
             }
         }
@@ -98,15 +124,26 @@
             clearInterval(videoElementCheckInterval);
         }
 
-        // Check every 5 seconds if video element is still valid
+        // Check every 2 seconds if video element is still valid
         videoElementCheckInterval = setInterval(() => {
             const videoElement = getVideoElement();
             if (!videoElement) {
                 console.warn('🚨 Video element check failed - element lost from DOM');
                 // Try to reinitialize if video element is completely lost
                 initializeVideoPlayer();
+            } else {
+                // Also validate that the element is still properly configured
+                try {
+                    if (typeof videoElement.play !== 'function' || typeof videoElement.pause !== 'function') {
+                        console.warn('⚠️ Video element exists but methods are missing');
+                        initializeVideoPlayer();
+                    }
+                } catch (error) {
+                    console.warn('⚠️ Video element validation error:', error.message);
+                    initializeVideoPlayer();
+                }
             }
-        }, 5000);
+        }, 2000);
     }
 
     function stopVideoElementCheck() {
@@ -427,15 +464,24 @@
         const videoElement = getVideoElement();
         if (!videoElement) {
             console.warn('Cannot pause: video element not available');
-            return;
-        }
-
-        if (typeof videoElement.pause !== 'function') {
-            console.warn('Cannot pause: pause method not available on video element');
+            updatePlayButton(true); // Update UI to show paused state
             return;
         }
 
         try {
+            // Validate that this is actually a video element
+            if (videoElement.tagName !== 'VIDEO') {
+                console.warn('Cannot pause: element is not a video element');
+                updatePlayButton(true);
+                return;
+            }
+
+            if (typeof videoElement.pause !== 'function') {
+                console.warn('Cannot pause: pause method not available on video element');
+                updatePlayButton(true);
+                return;
+            }
+
             // Check if video is actually playing before trying to pause
             if (!videoElement.paused) {
                 videoElement.pause();
@@ -443,6 +489,7 @@
                 console.log('✅ Video paused successfully');
             } else {
                 console.log('ℹ️ Video already paused, no action needed');
+                updatePlayButton(true); // Ensure UI shows correct state
             }
         } catch (error) {
             console.warn('❌ Pause video error:', error.message);

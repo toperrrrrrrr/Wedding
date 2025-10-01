@@ -113,39 +113,27 @@
         }, timeoutDuration);
     }
 
-    // Alternative iframe detection method using container observation
+    // Alternative iframe detection method - completely CORS-free
     function checkIframeContainerChanges(iframe) {
         return new Promise((resolve, reject) => {
             try {
-                const container = iframe.parentElement;
-                if (!container) {
-                    reject(new Error('Iframe container not found'));
-                    return;
-                }
-
-                // Check if iframe has loaded by examining its properties
-                // Google Forms iframes typically have scrollHeight > 0 when loaded
-                if (iframe.scrollHeight > 100) {
-                    console.log('✅ Iframe appears loaded (scrollHeight > 100)');
+                // Check if iframe has loaded by examining its properties (no CORS needed)
+                // Google Forms iframes typically have scrollHeight > 100 when loaded
+                if (iframe.scrollHeight > 100 || iframe.offsetHeight > 100) {
+                    console.log('✅ Iframe appears loaded (dimensions > 100px)');
                     resolve();
                     return;
                 }
 
-                // Set up a mutation observer on the container to detect changes
+                // Set up a mutation observer on the document body to detect DOM changes
+                // This avoids CORS issues by observing the main document instead of iframe content
                 const observer = new MutationObserver((mutations) => {
                     mutations.forEach((mutation) => {
-                        // Look for changes that might indicate the iframe has loaded
-                        if (mutation.type === 'attributes' && mutation.attributeName === 'style') {
-                            // Check if iframe became visible or got content
+                        // Look for changes that might indicate iframe content has loaded
+                        if (mutation.type === 'childList' || mutation.type === 'subtree') {
+                            // Check if iframe dimensions have changed (indicates content loaded)
                             if (iframe.scrollHeight > 100 || iframe.offsetHeight > 100) {
-                                console.log('✅ Iframe loaded detected via container mutation');
-                                observer.disconnect();
-                                resolve();
-                            }
-                        } else if (mutation.type === 'childList') {
-                            // Check if iframe dimensions changed significantly
-                            if (iframe.scrollHeight > 100 || iframe.offsetHeight > 100) {
-                                console.log('✅ Iframe loaded detected via child list mutation');
+                                console.log('✅ Iframe loaded detected via DOM mutation');
                                 observer.disconnect();
                                 resolve();
                             }
@@ -153,27 +141,32 @@
                     });
                 });
 
-                // Observe both attributes and child list changes
-                observer.observe(container, {
-                    attributes: true,
-                    attributeFilter: ['style'],
+                // Observe the entire document for changes
+                observer.observe(document.body, {
                     childList: true,
                     subtree: true
                 });
 
-                // Also set up a polling mechanism as backup
+                // Set up a more frequent polling mechanism as primary detection method
                 let pollCount = 0;
                 const pollInterval = setInterval(() => {
                     pollCount++;
-                    if (iframe.scrollHeight > 100 || iframe.offsetHeight > 100) {
-                        console.log('✅ Iframe loaded detected via polling');
+
+                    // Check multiple indicators that iframe has loaded (all CORS-free)
+                    const hasContent = iframe.scrollHeight > 100 ||
+                                     iframe.offsetHeight > 100 ||
+                                     iframe.clientHeight > 100 ||
+                                     (iframe.contentWindow && iframe.contentWindow.postMessage);
+
+                    if (hasContent) {
+                        console.log('✅ Iframe loaded detected via polling (attempt ' + pollCount + ')');
                         observer.disconnect();
                         clearInterval(pollInterval);
                         resolve();
-                    } else if (pollCount >= 30) { // 3 seconds at 100ms intervals
+                    } else if (pollCount >= 50) { // 5 seconds at 100ms intervals
                         observer.disconnect();
                         clearInterval(pollInterval);
-                        reject(new Error('Iframe container detection timeout'));
+                        reject(new Error('Iframe polling detection timeout'));
                     }
                 }, 100);
 
@@ -182,7 +175,7 @@
                     observer.disconnect();
                     clearInterval(pollInterval);
                     reject(new Error('Iframe detection overall timeout'));
-                }, 5000);
+                }, 8000);
 
             } catch (error) {
                 console.log('Container detection method failed:', error.message);

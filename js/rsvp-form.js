@@ -40,7 +40,7 @@
         const iframe = document.getElementById('rsvpIframe');
         const originalSrc = iframe.src;
 
-        console.log(`Loading RSVP form attempt ${retryCount + 1}/${maxRetries + 1}`);
+        console.log(`🚀 Starting RSVP form load attempt ${retryCount + 1}/${maxRetries + 1}`);
 
         // Show loading state
         showFormLoading();
@@ -51,22 +51,40 @@
         // Reset form loaded state
         formLoaded = false;
 
-        // Remove existing event listeners to prevent conflicts
+        // Remove ALL existing event listeners to prevent conflicts and duplicates
         iframe.removeEventListener('load', handleFormLoad);
         iframe.removeEventListener('error', handleFormError);
 
-        // Add fresh event listeners
-        iframe.addEventListener('load', handleFormLoad);
-        iframe.addEventListener('error', handleFormError);
+        // Add fresh event listeners with proper error handling
+        const loadHandler = function() {
+            console.log('📋 Load event triggered');
+            handleFormLoad();
+            // Remove listeners after successful load to prevent multiple triggers
+            iframe.removeEventListener('load', loadHandler);
+            iframe.removeEventListener('error', errorHandler);
+        };
 
-        // Force reload with cache busting
+        const errorHandler = function() {
+            console.log('❌ Error event triggered');
+            handleFormError();
+            // Remove listeners after error to prevent multiple triggers
+            iframe.removeEventListener('load', loadHandler);
+            iframe.removeEventListener('error', errorHandler);
+        };
+
+        iframe.addEventListener('load', loadHandler);
+        iframe.addEventListener('error', errorHandler);
+
+        // Force reload with cache busting - use a more unique identifier
+        const timestamp = Date.now();
+        const attemptId = Math.random().toString(36).substr(2, 9);
         const separator = originalSrc.includes('?') ? '&' : '?';
-        const newSrc = originalSrc + separator + 'load_attempt=' + Date.now() + '_' + retryCount;
+        const newSrc = originalSrc + separator + `load_attempt=${timestamp}_${retryCount}_${attemptId}`;
 
-        console.log('Setting iframe src:', newSrc);
+        console.log('🔄 Setting iframe src:', newSrc.substring(0, 100) + '...');
         iframe.src = newSrc;
 
-        // Set a more responsive timeout (5 seconds for first attempt, 3 seconds for retries)
+        // Set a more responsive timeout (8 seconds for first attempt, 5 seconds for retries)
         const timeoutDuration = retryCount === 0 ? 8000 : 5000;
 
         // Clear existing timeout
@@ -76,15 +94,31 @@
 
         loadingTimeout = setTimeout(() => {
             if (!formLoaded) {
-                console.log(`Form load timeout on attempt ${retryCount + 1}`);
+                console.log(`⏰ Form load timeout on attempt ${retryCount + 1} (no load event received)`);
+                // Remove listeners before timeout handling
+                iframe.removeEventListener('load', loadHandler);
+                iframe.removeEventListener('error', errorHandler);
                 handleFormTimeout();
             }
         }, timeoutDuration);
     }
 
     function handleFormLoad() {
+        if (formLoaded) {
+            console.log('⚠️ Load event triggered but form already marked as loaded - ignoring');
+            return; // Prevent multiple load triggers
+        }
+
         formLoaded = true;
         retryCount = 0; // Reset retry count on successful load
+
+        console.log('✅ RSVP form loaded successfully - stopping all retry attempts');
+
+        // Clear any pending timeouts
+        if (loadingTimeout) {
+            clearTimeout(loadingTimeout);
+            loadingTimeout = null;
+        }
 
         hideFormLoading();
         showFormStatus('Form loaded successfully!', 'success');
@@ -94,7 +128,7 @@
             clearFormStatus();
         }, 2000);
 
-        console.log('✅ RSVP form loaded successfully');
+        console.log('✅ RSVP form loading process completed');
     }
 
     function handleFormError() {
@@ -104,11 +138,18 @@
 
     function handleFormTimeout() {
         const iframe = document.getElementById('rsvpIframe');
+
+        // Clear any pending timeouts
+        if (loadingTimeout) {
+            clearTimeout(loadingTimeout);
+            loadingTimeout = null;
+        }
+
         hideFormLoading();
 
         if (retryCount < maxRetries) {
             retryCount++;
-            console.log(`Retrying form load in ${retryDelay}ms (attempt ${retryCount}/${maxRetries})`);
+            console.log(`⏰ Load timeout - retrying in ${retryDelay}ms (attempt ${retryCount}/${maxRetries})`);
 
             showFormStatus(`Retrying... (${retryCount}/${maxRetries})`, 'loading');
 

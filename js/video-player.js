@@ -19,6 +19,19 @@
     let progressBarVisible = true;
     let progressBarTimeout = null;
     
+    // Helper function to safely access video properties
+    function safeVideoAccess(callback) {
+        if (video && typeof callback === 'function') {
+            try {
+                return callback(video);
+            } catch (error) {
+                console.warn('Video access error:', error.message);
+                return null;
+            }
+        }
+        return null;
+    }
+
     function initializeVideoPlayer() {
         // Get elements
         video = document.getElementById('wedding-video');
@@ -27,8 +40,11 @@
         currentTimeEl = document.getElementById('video-current-time');
         durationEl = document.getElementById('video-duration');
         progressBar = document.querySelector('.video-progress-bar');
-        
-        if (!video) return;
+
+        if (!video) {
+            console.log('Video element not found - video player disabled');
+            return;
+        }
         
         // Set up event listeners
         setupVideoEvents();
@@ -274,27 +290,43 @@
     
     function playVideo() {
         console.log('Attempting to play video...');
-        
-        // Ensure video is ready
-        if (video.readyState < 2) {
+
+        // Check if video element exists and has required methods
+        if (!video || typeof video.play !== 'function') {
+            console.warn('Video element not available for play operation');
+            return;
+        }
+
+        // Ensure video is ready using safe access
+        const readyState = safeVideoAccess(function(v) {
+            return v.readyState;
+        });
+
+        if (readyState < 2) {
             console.log('Video not ready, waiting for metadata...');
-            video.addEventListener('loadeddata', function() {
-                playVideo();
-            }, { once: true });
+            safeVideoAccess(function(v) {
+                v.addEventListener('loadeddata', function() {
+                    playVideo();
+                }, { once: true });
+            });
             return;
         }
         
         // Try to play with audio if user has interacted, otherwise start muted
-        if (hasUserInteracted) {
-            video.muted = false;
-            video.volume = 0.01; // Always start at 1% volume
-            console.log('Playing with audio at 1% volume (user has interacted)');
-        } else {
-            video.muted = true;
-            console.log('Playing muted (no user interaction yet)');
-        }
-        
-        const playPromise = video.play();
+        safeVideoAccess(function(v) {
+            if (hasUserInteracted) {
+                v.muted = false;
+                v.volume = 0.01; // Always start at 1% volume
+                console.log('Playing with audio at 1% volume (user has interacted)');
+            } else {
+                v.muted = true;
+                console.log('Playing muted (no user interaction yet)');
+            }
+        });
+
+        const playPromise = safeVideoAccess(function(v) {
+            return v.play();
+        });
         
         if (playPromise !== undefined) {
             playPromise.then(() => {
@@ -302,13 +334,15 @@
                 updatePlayButton(false);
                 
                 // If we started muted but user has now interacted, unmute
-                if (video.muted && hasUserInteracted) {
-                    setTimeout(() => {
-                        video.muted = false;
-                        video.volume = 0.01; // Start at 1% when unmuting
-                        console.log('Video unmuted at 1% volume after user interaction');
-                    }, 100);
-                }
+                safeVideoAccess(function(v) {
+                    if (v.muted && hasUserInteracted) {
+                        setTimeout(() => {
+                            v.muted = false;
+                            v.volume = 0.01; // Start at 1% when unmuting
+                            console.log('Video unmuted at 1% volume after user interaction');
+                        }, 100);
+                    }
+                });
             }).catch(error => {
                 console.warn('Video play failed:', error);
                 updatePlayButton(true);
@@ -321,8 +355,10 @@
     }
     
     function pauseVideo() {
-        video.pause();
-        updatePlayButton(true);
+        safeVideoAccess(function(v) {
+            v.pause();
+            updatePlayButton(true);
+        });
     }
     
     function updatePlayButton(showPlay) {

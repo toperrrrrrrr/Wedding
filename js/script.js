@@ -32,12 +32,46 @@ document.addEventListener('DOMContentLoaded', function() {
     // Mobile Navigation Toggle
     const navToggle = document.getElementById('nav-toggle');
     const navMenu = document.getElementById('nav-menu');
-    
+
     if (navToggle) {
         navToggle.addEventListener('click', function() {
             navMenu.classList.toggle('active');
             navToggle.classList.toggle('active');
         });
+    }
+
+    // Logo/Home button functionality
+    const navLogo = document.querySelector('.nav-logo');
+    if (navLogo) {
+        navLogo.addEventListener('click', function() {
+            // Close mobile menu if open
+            navMenu.classList.remove('active');
+            navToggle.classList.remove('active');
+
+            // Scroll to top (home section)
+            const homeSection = document.getElementById('home');
+            if (homeSection) {
+                const headerOffset = window.innerWidth < 768 ? 70 : 80;
+                const elementPosition = homeSection.getBoundingClientRect().top;
+                const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+
+                window.scrollTo({
+                    top: offsetPosition,
+                    behavior: 'smooth'
+                });
+
+                // Update active navigation state
+                const navLinks = document.querySelectorAll('.nav-link');
+                navLinks.forEach(link => link.classList.remove('active'));
+                const homeLink = document.querySelector('.nav-link[href="#home"]');
+                if (homeLink) {
+                    homeLink.classList.add('active');
+                }
+            }
+        });
+
+        // Add cursor pointer style
+        navLogo.style.cursor = 'pointer';
     }
     
     // Close mobile menu when clicking on links

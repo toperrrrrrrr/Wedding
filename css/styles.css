@@ -111,6 +111,17 @@ body {
     font-size: 1.5rem;
     font-weight: 600;
     color: var(--text-dark);
+    cursor: pointer;
+    transition: var(--transition);
+    user-select: none;
+    display: flex;
+    align-items: center;
+}
+
+.nav-logo:hover {
+    opacity: 0.8;
+    transform: scale(1.05);
+    color: var(--primary-color);
 }
 
 .logo-image {
@@ -186,6 +197,15 @@ body {
 
     .nav-toggle.active .close-icon {
         display: block;
+    }
+
+    .nav-logo {
+        font-size: 1.3rem;
+        padding: 0.5rem;
+    }
+
+    .nav-logo:hover {
+        transform: scale(1.02);
     }
 
     .nav-menu {

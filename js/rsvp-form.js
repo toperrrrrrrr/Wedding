@@ -228,11 +228,17 @@
             // Reset form loaded state
             formLoaded = false;
 
-            // Reload the iframe by changing its src
+            // Force reload the iframe by appending a cache-busting parameter
             const currentSrc = iframe.src;
-            iframe.src = currentSrc;
+            const separator = currentSrc.includes('?') ? '&' : '?';
+            const newSrc = currentSrc + separator + 'reload=' + Date.now();
 
-            console.log('RSVP form reloaded');
+            // Set the new src to force reload
+            iframe.src = newSrc;
+
+            console.log('RSVP form reloaded with cache busting:', newSrc);
+        } else {
+            console.error('RSVP form elements not found for reload');
         }
     }
 
@@ -261,6 +267,9 @@
     };
 
     console.log('Enhanced RSVP form system initialized with loading states, error handling, and improved UX');
+
+    // Make reloadRSVPForm function globally available for direct access
+    window.reloadRSVPForm = reloadRSVPForm;
 
     // Initialize when DOM is ready
     document.addEventListener('DOMContentLoaded', initializeRSVPForm);

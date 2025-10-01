@@ -589,9 +589,18 @@
                         <div class="material-icons error-icon">warning</div>
                         <h4>Unable to Load Form</h4>
                         <p>There was an issue loading the RSVP form. Please try refreshing the page or use the alternative link below.</p>
-                        <button class="btn btn-primary" onclick="window.open('https://forms.gle/AoFihXFKErGzpoFq7', '_blank')">
-                            Open Form in New Window
-                        </button>
+
+                        <!-- Error Action Buttons -->
+                        <div class="error-actions">
+                            <button class="btn btn-primary" onclick="reloadRSVPForm()">
+                                <span class="material-icons btn-icon">refresh</span>
+                                Reload Form
+                            </button>
+                            <button class="btn btn-secondary" onclick="window.open('https://forms.gle/AoFihXFKErGzpoFq7', '_blank')">
+                                <span class="material-icons btn-icon">open_in_new</span>
+                                Open Form in New Window
+                            </button>
+                        </div>
                     </div>
 
                     <!-- Form Container -->

@@ -3965,6 +3965,14 @@ textarea {
     margin-bottom: 1rem;
 }
 
+.error-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 1.5rem;
+}
+
 .material-icons.error-icon {
     font-size: 3rem;
     vertical-align: middle;
@@ -4307,6 +4315,11 @@ textarea {
     .form-error, .form-success {
         padding: 1.5rem 1rem;
         margin: 1rem;
+    }
+
+    .error-actions {
+        flex-direction: column;
+        gap: 0.8rem;
     }
 
     .form-controls {

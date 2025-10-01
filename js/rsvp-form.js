@@ -212,6 +212,30 @@
         });
     }
 
+    // Function to reload the RSVP form
+    function reloadRSVPForm() {
+        const iframe = document.getElementById('rsvpIframe');
+        const formContainer = document.getElementById('iframeContainer');
+        const errorEl = document.getElementById('formError');
+
+        if (iframe && formContainer && errorEl) {
+            // Hide error state
+            errorEl.style.display = 'none';
+
+            // Show loading state
+            showFormLoading();
+
+            // Reset form loaded state
+            formLoaded = false;
+
+            // Reload the iframe by changing its src
+            const currentSrc = iframe.src;
+            iframe.src = currentSrc;
+
+            console.log('RSVP form reloaded');
+        }
+    }
+
     // Initialize when DOM is ready
     document.addEventListener('DOMContentLoaded', initializeRSVPForm);
 
@@ -224,6 +248,7 @@
         scrollToTop: scrollToTop,
         showLoading: showFormLoading,
         showError: showFormError,
+        reload: reloadRSVPForm,
         showSuccess: () => {
             const successEl = document.getElementById('formSuccess');
             const containerEl = document.getElementById('iframeContainer');

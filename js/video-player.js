@@ -1,0 +1,705 @@
+// Full-Screen Video Player with Scroll Controls
+(function() {
+    'use strict';
+    
+    let video;
+    let playBtn;
+    let progressFill;
+    let currentTimeEl;
+    let durationEl;
+    let progressBar;
+    let isScrolling = false;
+    let scrollTimeout;
+    let wasPlayingBeforeScroll = false;
+    let videoSectionTimer = null;
+    let timeInVideoSection = 0;
+    let baseVolume = 0.01; // Start at 1% volume
+    let isInVideoSection = false;
+    let hasUserInteracted = false;
+    let progressBarVisible = true;
+    let progressBarTimeout = null;
+    
+    function initializeVideoPlayer() {
+        // Get elements
+        video = document.getElementById('wedding-video');
+        playBtn = document.getElementById('video-play-btn');
+        progressFill = document.getElementById('video-progress-fill');
+        currentTimeEl = document.getElementById('video-current-time');
+        durationEl = document.getElementById('video-duration');
+        progressBar = document.querySelector('.video-progress-bar');
+        
+        if (!video) return;
+        
+        // Set up event listeners
+        setupVideoEvents();
+        setupScrollEvents();
+        setupIntersectionObserver();
+    }
+    
+    function setupVideoEvents() {
+        // Safety checks
+        if (!playBtn || !progressBar) {
+            console.log('⚠️ Video player controls not found, skipping video player setup');
+            return;
+        }
+        
+        // Play/Pause button
+        playBtn.addEventListener('click', togglePlay);
+        
+        // Video events
+        video.addEventListener('loadedmetadata', updateDuration);
+        video.addEventListener('timeupdate', updateProgress);
+        video.addEventListener('ended', onVideoEnd);
+        
+        // Progress bar click
+        progressBar.addEventListener('click', seekVideo);
+        
+        // Video click to toggle play/pause
+        video.addEventListener('click', togglePlay);
+        
+        // Handle video loading errors
+        video.addEventListener('error', handleVideoError);
+        
+        // Detect user interaction for autoplay
+        setupUserInteractionDetection();
+        
+        // Setup progress bar auto-hide functionality
+        setupProgressBarAutoHide();
+    }
+    
+    function setupUserInteractionDetection() {
+        const interactionEvents = ['click', 'touchstart', 'keydown', 'scroll'];
+        
+        function markUserInteraction() {
+            if (!hasUserInteracted) {
+                hasUserInteracted = true;
+                console.log('User interaction detected - autoplay with audio enabled');
+                
+                // Remove event listeners after first interaction
+                interactionEvents.forEach(event => {
+                    document.removeEventListener(event, markUserInteraction, { passive: true });
+                });
+            }
+        }
+        
+        // Add event listeners for user interaction
+        interactionEvents.forEach(event => {
+            document.addEventListener(event, markUserInteraction, { passive: true });
+        });
+    }
+    
+    function setupScrollEvents() {
+        let scrollTimer;
+        
+        window.addEventListener('scroll', function() {
+            // Detect when scrolling starts
+            if (!isScrolling) {
+                isScrolling = true;
+                onScrollStart();
+            }
+            
+            // Clear existing timer
+            clearTimeout(scrollTimer);
+            
+            // Set timer to detect when scrolling stops
+            scrollTimer = setTimeout(function() {
+                isScrolling = false;
+                onScrollEnd();
+            }, 150); // 150ms after scrolling stops
+        }, { passive: true });
+        
+        // Enhanced scroll snap behavior for video section
+        setupVideoSectionScrollSnap();
+    }
+    
+    function setupVideoSectionScrollSnap() {
+        let snapTimeout;
+        const videoSection = document.getElementById('video-section');
+        
+        if (!videoSection) return;
+        
+        window.addEventListener('scroll', function() {
+            clearTimeout(snapTimeout);
+            
+            snapTimeout = setTimeout(() => {
+                const rect = videoSection.getBoundingClientRect();
+                const viewportHeight = window.innerHeight;
+                
+                // Check if video section is partially visible
+                const isPartiallyVisible = rect.top < viewportHeight && rect.bottom > 0;
+                const visiblePercentage = Math.max(0, Math.min(1, 
+                    (viewportHeight - Math.max(0, rect.top)) / viewportHeight
+                ));
+                
+                // If more than 30% is visible but less than 90%, snap to video section
+                if (isPartiallyVisible && visiblePercentage > 0.3 && visiblePercentage < 0.9) {
+                    console.log('Snapping to video section, visibility:', visiblePercentage);
+                    videoSection.scrollIntoView({ 
+                        behavior: 'smooth', 
+                        block: 'start' 
+                    });
+                    
+                    // Trigger video play after snap completes
+                    setTimeout(() => {
+                        if (video && video.paused) {
+                            console.log('Auto-playing video after snap');
+                            isScrolling = false; // Override scrolling state
+                            enterVideoSection();
+                            playVideo();
+                        }
+                    }, 600); // Wait for snap animation to complete
+                }
+            }, 300); // Wait for scroll to settle
+        }, { passive: true });
+    }
+    
+    function setupIntersectionObserver() {
+        const options = {
+            threshold: [0.3, 0.5, 0.7], // Multiple thresholds for better detection
+            rootMargin: '0px'
+        };
+        
+        const observer = new IntersectionObserver(function(entries) {
+            entries.forEach(entry => {
+                console.log('Video section intersection:', {
+                    isIntersecting: entry.isIntersecting,
+                    intersectionRatio: entry.intersectionRatio,
+                    isScrolling: isScrolling,
+                    videoPaused: video.paused
+                });
+                
+                if (entry.isIntersecting && entry.intersectionRatio >= 0.5) {
+                    // Video section is sufficiently in view (50% or more)
+                    console.log('Video section in view - attempting to play');
+                    
+                    // Enter video section
+                    enterVideoSection();
+                    
+                    // More aggressive auto-play logic
+                    if (video.paused) {
+                        if (!isScrolling) {
+                            // Immediate play if not scrolling
+                            console.log('Immediate play - not scrolling');
+                            playVideo();
+                        } else {
+                            // Shorter delay if scrolling
+                            setTimeout(() => {
+                                if (video.paused) {
+                                    console.log('Playing video after scroll delay');
+                                    isScrolling = false; // Force scroll state to false
+                                    playVideo();
+                                }
+                            }, 400); // Shorter delay for more responsive play
+                        }
+                    }
+                    
+                    // If section is 90%+ visible, force play regardless of scroll state
+                    if (entry.intersectionRatio >= 0.9 && video.paused) {
+                        console.log('Section fully visible - force playing video');
+                        isScrolling = false;
+                        playVideo();
+                    }
+                } else if (!entry.isIntersecting || entry.intersectionRatio < 0.3) {
+                    // Video section is mostly out of view
+                    console.log('Video section out of view - pausing');
+                    
+                    // Exit video section
+                    exitVideoSection();
+                    
+                    if (!video.paused) {
+                        pauseVideo();
+                    }
+                }
+            });
+        }, options);
+        
+        const videoSection = document.getElementById('video-section');
+        if (videoSection) {
+            observer.observe(videoSection);
+            console.log('Video intersection observer set up');
+        } else {
+            console.error('Video section not found for intersection observer');
+        }
+    }
+    
+    function onScrollStart() {
+        if (!video.paused) {
+            wasPlayingBeforeScroll = true;
+            pauseVideo();
+        } else {
+            wasPlayingBeforeScroll = false;
+        }
+    }
+    
+    function onScrollEnd() {
+        // Check if video section is still in view
+        const videoSection = document.getElementById('video-section');
+        const rect = videoSection.getBoundingClientRect();
+        const viewportHeight = window.innerHeight;
+        const isInView = rect.top < viewportHeight && rect.bottom > 0;
+        
+        // Calculate how much of the video section is visible
+        const visiblePercentage = Math.max(0, Math.min(1, 
+            (viewportHeight - Math.max(0, rect.top)) / viewportHeight
+        ));
+        
+        console.log('Scroll ended - video section visibility:', visiblePercentage);
+        
+        // If video section is mostly visible (70%+), ensure it's playing
+        if (isInView && visiblePercentage >= 0.7 && video && video.paused) {
+            console.log('Video section visible after scroll end - auto-playing');
+            enterVideoSection();
+            setTimeout(() => {
+                if (video.paused) {
+                    playVideo();
+                }
+            }, 200); // Small delay to ensure everything is ready
+        }
+        
+        // Legacy behavior for resuming after scroll
+        if (isInView && wasPlayingBeforeScroll) {
+            setTimeout(() => {
+                playVideo();
+            }, 300); // Small delay to ensure smooth transition
+        }
+    }
+    
+    function togglePlay() {
+        if (video.paused) {
+            playVideo();
+        } else {
+            pauseVideo();
+        }
+    }
+    
+    function playVideo() {
+        console.log('Attempting to play video...');
+        
+        // Ensure video is ready
+        if (video.readyState < 2) {
+            console.log('Video not ready, waiting for metadata...');
+            video.addEventListener('loadeddata', function() {
+                playVideo();
+            }, { once: true });
+            return;
+        }
+        
+        // Try to play with audio if user has interacted, otherwise start muted
+        if (hasUserInteracted) {
+            video.muted = false;
+            video.volume = 0.01; // Always start at 1% volume
+            console.log('Playing with audio at 1% volume (user has interacted)');
+        } else {
+            video.muted = true;
+            console.log('Playing muted (no user interaction yet)');
+        }
+        
+        const playPromise = video.play();
+        
+        if (playPromise !== undefined) {
+            playPromise.then(() => {
+                console.log('Video playing successfully');
+                updatePlayButton(false);
+                
+                // If we started muted but user has now interacted, unmute
+                if (video.muted && hasUserInteracted) {
+                    setTimeout(() => {
+                        video.muted = false;
+                        video.volume = 0.01; // Start at 1% when unmuting
+                        console.log('Video unmuted at 1% volume after user interaction');
+                    }, 100);
+                }
+            }).catch(error => {
+                console.warn('Video play failed:', error);
+                updatePlayButton(true);
+                showAutoplayBlocked();
+            });
+        } else {
+            console.log('Play promise undefined');
+            updatePlayButton(false);
+        }
+    }
+    
+    function pauseVideo() {
+        video.pause();
+        updatePlayButton(true);
+    }
+    
+    function updatePlayButton(showPlay) {
+        const playIcon = playBtn.querySelector('.play-icon');
+        const pauseIcon = playBtn.querySelector('.pause-icon');
+        
+        if (showPlay) {
+            playIcon.style.display = 'inline';
+            pauseIcon.style.display = 'none';
+        } else {
+            playIcon.style.display = 'none';
+            pauseIcon.style.display = 'inline';
+        }
+    }
+    
+    function updateDuration() {
+        if (video.duration) {
+            durationEl.textContent = formatTime(video.duration);
+        }
+    }
+    
+    function updateProgress() {
+        if (video.duration) {
+            const progress = (video.currentTime / video.duration) * 100;
+            progressFill.style.width = progress + '%';
+            currentTimeEl.textContent = formatTime(video.currentTime);
+        }
+    }
+    
+    function seekVideo(e) {
+        const rect = progressBar.getBoundingClientRect();
+        const pos = (e.clientX - rect.left) / rect.width;
+        video.currentTime = pos * video.duration;
+    }
+    
+    function onVideoEnd() {
+        updatePlayButton(true);
+        progressFill.style.width = '100%';
+    }
+    
+    function formatTime(seconds) {
+        const mins = Math.floor(seconds / 60);
+        const secs = Math.floor(seconds % 60);
+        return mins + ':' + (secs < 10 ? '0' : '') + secs;
+    }
+    
+    function enterVideoSection() {
+        if (isInVideoSection) return;
+        
+        console.log('Entering video section');
+        isInVideoSection = true;
+        timeInVideoSection = 0; // Reset timer
+        
+        // Hide navbar
+        document.body.classList.add('video-section-active');
+        
+        // Unmute and set initial volume to exactly 1%
+        if (video) {
+            video.muted = false;
+            video.volume = 0.01; // Force 1% volume
+            console.log('Video unmuted, volume set to: 1%');
+        }
+        
+        // Start timer for exponential volume increase
+        startVideoSectionTimer();
+        
+        // Start video controls auto-hide after 3 seconds
+        clearTimeout(progressBarTimeout);
+        progressBarTimeout = setTimeout(() => {
+            if (!video.paused) {
+                hideVideoControls();
+            }
+        }, 3000);
+    }
+    
+    function exitVideoSection() {
+        if (!isInVideoSection) return;
+        
+        console.log('Exiting video section');
+        isInVideoSection = false;
+        
+        // Show navbar
+        document.body.classList.remove('video-section-active');
+        
+        // Stop timer
+        stopVideoSectionTimer();
+        
+        // Mute and reset volume
+        if (video) {
+            video.muted = true;
+            video.volume = baseVolume;
+            console.log('Video muted and volume reset');
+        }
+        
+        timeInVideoSection = 0;
+        
+        // Show video controls when exiting video section
+        showVideoControls();
+        clearTimeout(progressBarTimeout);
+    }
+    
+    function startVideoSectionTimer() {
+        stopVideoSectionTimer(); // Clear any existing timer
+        
+        // Reset time counter to ensure we start from 0
+        timeInVideoSection = 0;
+        
+        videoSectionTimer = setInterval(() => {
+            if (isInVideoSection) {
+                timeInVideoSection += 0.1; // Increment by 100ms
+                
+                // Smoother exponential volume increase: starts at 1%, reaches ~50% at 5s, 80% at 10s, 100% at 15s
+                // Formula: volume = 0.01 + (0.99 * (1 - e^(-time/5)))
+                const exponentialFactor = 1 - Math.exp(-timeInVideoSection / 5);
+                const newVolume = Math.min(1.0, 0.01 + (0.99 * exponentialFactor));
+                
+                if (video && !video.paused) {
+                    video.volume = newVolume;
+                    console.log(`Time in section: ${timeInVideoSection.toFixed(1)}s, Volume: ${(newVolume * 100).toFixed(1)}%`);
+                }
+            }
+        }, 100); // Update every 100ms
+    }
+    
+    function stopVideoSectionTimer() {
+        if (videoSectionTimer) {
+            clearInterval(videoSectionTimer);
+            videoSectionTimer = null;
+        }
+    }
+    
+    function hideVideoControls() {
+        const progressContainer = document.querySelector('.video-progress-container');
+        const videoControls = document.querySelector('.video-controls');
+        const scrollHint = document.querySelector('.video-scroll-hint');
+        
+        if (progressContainer && progressBarVisible) {
+            progressContainer.classList.add('hidden');
+            progressBarVisible = false;
+            console.log('Video controls hidden');
+        }
+        
+        if (videoControls) {
+            videoControls.classList.add('hidden');
+        }
+        
+        if (scrollHint) {
+            scrollHint.classList.add('hidden');
+        }
+    }
+    
+    function showVideoControls() {
+        const progressContainer = document.querySelector('.video-progress-container');
+        const videoControls = document.querySelector('.video-controls');
+        const scrollHint = document.querySelector('.video-scroll-hint');
+        
+        if (progressContainer && !progressBarVisible) {
+            progressContainer.classList.remove('hidden');
+            progressBarVisible = true;
+            console.log('Video controls shown');
+        }
+        
+        if (videoControls) {
+            videoControls.classList.remove('hidden');
+        }
+        
+        if (scrollHint) {
+            scrollHint.classList.remove('hidden');
+        }
+        
+        // Clear any existing timeout
+        clearTimeout(progressBarTimeout);
+        
+        // Hide again after 3 seconds if video is playing
+        if (!video.paused) {
+            progressBarTimeout = setTimeout(() => {
+                hideVideoControls();
+            }, 3000);
+        }
+    }
+    
+    // Keep old function names for compatibility
+    function hideProgressBar() {
+        hideVideoControls();
+    }
+    
+    function showProgressBar() {
+        showVideoControls();
+    }
+    
+    function setupProgressBarAutoHide() {
+        // Show video controls on mouse movement over video
+        const videoSection = document.getElementById('video-section');
+        if (videoSection) {
+            videoSection.addEventListener('mousemove', () => {
+                if (isInVideoSection) {
+                    showVideoControls();
+                }
+            });
+            
+            videoSection.addEventListener('mouseleave', () => {
+                if (isInVideoSection && !video.paused) {
+                    clearTimeout(progressBarTimeout);
+                    progressBarTimeout = setTimeout(() => {
+                        hideVideoControls();
+                    }, 1000); // Hide after 1 second when mouse leaves
+                }
+            });
+        }
+        
+        // Show video controls on touch/click
+        video.addEventListener('touchstart', showVideoControls);
+        video.addEventListener('click', showVideoControls);
+        
+        // Show video controls when video is paused
+        video.addEventListener('pause', showVideoControls);
+        
+        // Hide video controls when video starts playing (after 3 seconds)
+        video.addEventListener('play', () => {
+            clearTimeout(progressBarTimeout);
+            progressBarTimeout = setTimeout(() => {
+                hideVideoControls();
+            }, 3000);
+        });
+    }
+    
+    
+    function showAutoplayBlocked() {
+        const videoInfo = document.querySelector('.video-info');
+        if (videoInfo) {
+            const hint = document.createElement('p');
+            hint.className = 'autoplay-hint';
+            hint.style.cssText = `
+                color: #ffd700;
+                font-size: 0.9rem;
+                margin-top: 0.5rem;
+                animation: pulse 2s infinite;
+            `;
+            hint.textContent = 'Click to play video';
+            
+            // Remove existing hint if any
+            const existingHint = videoInfo.querySelector('.autoplay-hint');
+            if (existingHint) {
+                existingHint.remove();
+            }
+            
+            videoInfo.appendChild(hint);
+            
+            // Remove hint after 5 seconds
+            setTimeout(() => {
+                if (hint.parentNode) {
+                    hint.remove();
+                }
+            }, 5000);
+        }
+    }
+    
+    function handleVideoError() {
+        console.error('Video failed to load - vid.mp4 not found');
+        // Show helpful message when video is missing
+        const videoOverlay = document.querySelector('.video-overlay');
+        if (videoOverlay) {
+            videoOverlay.innerHTML = `
+                <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; color: white; text-align: center; background: rgba(0,0,0,0.8); border-radius: 20px; margin: 2rem; padding: 2rem;">
+                    <div style="font-size: 4rem; margin-bottom: 1rem;">🎬</div>
+                    <h3 style="margin: 0 0 1rem 0; font-size: 1.5rem;">Wedding Video Coming Soon!</h3>
+                    <p style="margin: 0; opacity: 0.8; line-height: 1.6;">
+                        To add your wedding video:<br>
+                        1. Name your video file <strong>vid.mp4</strong><br>
+                        2. Place it in the <strong>assets/videos/</strong> folder<br>
+                        3. Refresh the page
+                    </p>
+                    <div style="margin-top: 1.5rem; padding: 0.5rem 1rem; background: rgba(255,215,0,0.2); border: 1px solid #ffd700; border-radius: 10px; font-size: 0.9rem;">
+                        💡 Tip: Use MP4 format for best compatibility
+                    </div>
+                </div>
+            `;
+        }
+    }
+    
+    // Cleanup function
+    function cleanup() {
+        stopVideoSectionTimer();
+        exitVideoSection();
+    }
+    
+    // Initialize when DOM is ready
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initializeVideoPlayer);
+    } else {
+        initializeVideoPlayer();
+    }
+    
+    // Cleanup on page unload
+    window.addEventListener('beforeunload', cleanup);
+    window.addEventListener('pagehide', cleanup);
+    
+    // Add global functions for manual control and debugging
+    window.videoPlayer = {
+        play: playVideo,
+        pause: pauseVideo,
+        toggle: togglePlay,
+        forcePlay: function() {
+            console.log('Force playing video...');
+            isScrolling = false;
+            playVideo();
+        },
+        testAudio: function() {
+            if (video) {
+                console.log('Testing audio...');
+                video.muted = false;
+                video.volume = 0.8;
+                console.log('Video muted:', video.muted, 'Volume:', video.volume);
+                if (video.paused) {
+                    playVideo();
+                }
+            }
+        },
+        forceAutoplay: function() {
+            console.log('Force auto-play triggered');
+            const videoSection = document.getElementById('video-section');
+            const rect = videoSection.getBoundingClientRect();
+            const visiblePercentage = Math.max(0, Math.min(1, 
+                (window.innerHeight - Math.max(0, rect.top)) / window.innerHeight
+            ));
+            console.log('Video section visibility:', visiblePercentage);
+            if (visiblePercentage > 0.5) {
+                isScrolling = false;
+                enterVideoSection();
+                playVideo();
+            }
+        },
+        enterVideoMode: function() {
+            console.log('Manually entering video section...');
+            enterVideoSection();
+        },
+        checkStatus: function() {
+            const videoSection = document.getElementById('video-section');
+            const rect = videoSection ? videoSection.getBoundingClientRect() : null;
+            console.log('Video player status:', {
+                videoPaused: video ? video.paused : 'no video',
+                videoMuted: video ? video.muted : 'no video',
+                videoVolume: video ? `${(video.volume * 100).toFixed(1)}%` : 'no video',
+                videoReadyState: video ? video.readyState : 'no video',
+                isScrolling: isScrolling,
+                isInVideoSection: isInVideoSection,
+                timeInVideoSection: `${timeInVideoSection.toFixed(1)}s`,
+                sectionInView: rect ? (rect.top < window.innerHeight && rect.bottom > 0) : 'no section',
+                sectionRect: rect
+            });
+        },
+        testVolumeFormula: function() {
+            console.log('Volume progression test:');
+            for (let t = 0; t <= 20; t += 1) {
+                const exponentialFactor = 1 - Math.exp(-t / 5);
+                const volume = Math.min(1.0, 0.01 + (0.99 * exponentialFactor));
+                console.log(`${t}s: ${(volume * 100).toFixed(1)}%`);
+            }
+        },
+        showProgressBar: showProgressBar,
+        hideProgressBar: hideProgressBar,
+        showVideoControls: showVideoControls,
+        hideVideoControls: hideVideoControls,
+        toggleVideoControls: function() {
+            if (progressBarVisible) {
+                hideVideoControls();
+            } else {
+                showVideoControls();
+            }
+        },
+        toggleProgressBar: function() {
+            if (progressBarVisible) {
+                hideVideoControls();
+            } else {
+                showVideoControls();
+            }
+        }
+    };
+    
+})();

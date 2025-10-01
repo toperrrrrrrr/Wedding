@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="theme-color" content="#d4a574">
+    <title>Noriel & Gloria</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons&display=swap" rel="stylesheet">
+    <link href="css/styles.css" rel="stylesheet">
+    <link href="css/additional-styles.css" rel="stylesheet">
+    <!-- Google Maps API Configuration -->
+    <script>
+        // Set your Google Maps API key here
+        window.googleMapsApiKey = 'YOUR_GOOGLE_MAPS_API_KEY'; // Replace with your actual API key
+
+        // If no API key is provided, fallback to placeholder
+        if (window.googleMapsApiKey === 'YOUR_GOOGLE_MAPS_API_KEY') {
+            console.log('Google Maps API key not set. Maps will show fallback placeholders.');
+            console.log('To enable Google Maps, replace YOUR_GOOGLE_MAPS_API_KEY with your actual API key.');
+        }
+    </script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_MAPS_API_KEY&libraries=places&callback=venueMaps.init" async defer></script>
+  </head>
+  <body>
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <img src="assets/icons/text.svg" alt="N & G" class="logo-image">
+          </div>
+            <div class="nav-menu" id="nav-menu">
+                <a href="#home" class="nav-link">Home</a>
+                <a href="#story" class="nav-link">Our Story</a>
+                <a href="#details" class="nav-link">Details</a>
+                <a href="#gallery" class="nav-link">Gallery</a>
+                <a href="#venues" class="nav-link">Venues</a>
+                <a href="#faq" class="nav-link">FAQ</a>
+                <a href="#rsvp" class="nav-link nav-cta">RSVP</a>
+        </div>
+            <div class="nav-toggle" id="nav-toggle">
+                <img src="assets/icons/burger.svg" alt="Menu" class="burger-icon">
+                <img src="assets/icons/close.svg" alt="Close" class="close-icon">
+          </div>
+          </div>
+        </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero hero-glassmorphism">
+        <div class="hero-background-slideshow">
+            <div class="hero-bg-image active" style="background-image: url('top 5/P2P05402.jpg')"></div>
+            <div class="hero-bg-image" style="background-image: url('top 5/P2P05521.jpg')"></div>
+            <div class="hero-bg-image" style="background-image: url('top 5/P2P05549.jpg')"></div>
+            <div class="hero-bg-image" style="background-image: url('top 5/P2P07170.jpg')"></div>
+            <div class="hero-bg-image" style="background-image: url('top 5/P2P07339.jpg')"></div>
+        </div>
+        <div class="hero-overlay"></div>
+        
+        <div class="hero-content-centered">
+            <div class="hero-main-content">
+                <h1 class="hero-title-large">
+                    <span class="hero-name-elegant">Noriel</span>
+                    <span class="hero-ampersand-elegant">&</span>
+                    <span class="hero-name-elegant">Gloria</span>
+                </h1>
+                
+                <p class="hero-subtitle-elegant">
+                    <span class="subtitle-line">We're getting married!</span>
+                </p>
+                
+                <div class="hero-date-badge">
+                    <span class="date-month">December</span>
+                    <span class="date-day">27</span>
+                    <span class="date-year">2025</span>
+                </div>
+                
+                <p class="hero-location-elegant">
+                    <span class="subtitle-location">San Pablo City, Laguna</span>
+                </p>
+                
+                <div class="hero-actions">
+                    <a href="#rsvp" class="btn btn-primary-elegant">
+                        <span class="btn-text">RSVP Now</span>
+                    </a>
+                    <a href="#story" class="btn btn-secondary-elegant">
+                        <span class="btn-text">Our Story</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="hero-navigation-dots">
+            <span class="nav-dot active" data-slide="0"></span>
+            <span class="nav-dot" data-slide="1"></span>
+            <span class="nav-dot" data-slide="2"></span>
+            <span class="nav-dot" data-slide="3"></span>
+            <span class="nav-dot" data-slide="4"></span>
+        </div>
+        
+        <div class="scroll-indicator-elegant">
+            <div class="scroll-text">Scroll to explore</div>
+            <div class="scroll-arrow-elegant"></div>
+        </div>
+    </section>
+
+    <!-- Countdown Section -->
+    <section class="countdown-section">
+        <div class="container">
+            <h2 class="section-title">Counting Down to Our Big Day</h2>
+            <div class="countdown" id="countdown">
+                <div class="countdown-item">
+                    <span class="countdown-number" id="days">00</span>
+                    <span class="countdown-label">Days</span>
+                </div>
+                <div class="countdown-item">
+                    <span class="countdown-number" id="hours">00</span>
+                    <span class="countdown-label">Hours</span>
+            </div>
+                <div class="countdown-item">
+                    <span class="countdown-number" id="minutes">00</span>
+                    <span class="countdown-label">Minutes</span>
+          </div>
+                <div class="countdown-item">
+                    <span class="countdown-number" id="seconds">00</span>
+                    <span class="countdown-label">Seconds</span>
+              </div>
+            </div>
+                </div>
+    </section>
+
+    <!-- Full-Screen Video Section -->
+    <section class="video-section" id="video-section">
+        <div class="video-container">
+            <!-- Vimeo video embed -->
+            <iframe
+                id="wedding-video"
+                src="https://player.vimeo.com/video/1123191790?autoplay=0&muted=1&controls=1&title=0&byline=0&portrait=0"
+                class="fullscreen-video"
+                frameborder="0"
+                allow="autoplay; fullscreen; picture-in-picture"
+                allowfullscreen
+                style="width: 100%; height: 100%; position: absolute; top: 0; left: 0;">
+            </iframe>
+            <p>Your browser doesn't support video playback. <a href="https://vimeo.com/1123191790" target="_blank">Watch on Vimeo</a> instead.</p>
+            
+            <!-- Video Overlay (Simplified for Vimeo) -->
+            <div class="video-overlay">
+                <div class="video-info">
+                    <h3 class="video-title">Our Love Story</h3>
+                    <p class="video-subtitle">A glimpse into our journey together</p>
+                </div>
+
+                <!-- Scroll Indicator -->
+                <div class="video-scroll-hint">
+                    <p>Scroll to continue</p>
+                    <div class="scroll-arrow-down"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Our Love Story Section -->
+    <section id="story" class="story-section">
+        <div class="container">
+            <div class="story-content">
+                <div class="story-text">
+                    <h2 class="section-title">Our Love Story</h2>
+                    <div class="story-paragraphs">
+                        <p>Our journey began back in college, where a simple cheerleading coordination sparked something truly special. What started as a small crush blossomed into a beautiful partnership filled with love, balance, and endless laughter.</p>
+                        <p>From that magical birthday proposal to building our dreams together, we've created something extraordinary. Our story is one of chasing dreams, building businesses, embarking on countless adventures, and creating the family we've always wanted.</p>
+                        <p>Through every challenge and triumph, our love has only grown stronger. We can't wait to celebrate this next chapter with you - our next great adventure as husband and wife!</p>
+                    </div>
+                </div>
+                <div class="story-timeline">
+                    <div class="timeline-item">
+                        <div class="timeline-date">College Days</div>
+                        <div class="timeline-event">A cheerleading coordination that started it all</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-date">The Beginning</div>
+                        <div class="timeline-event">From crush to beautiful partnership</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-date">The Proposal</div>
+                        <div class="timeline-event">A magical birthday proposal that changed everything</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-date">Building Dreams</div>
+                        <div class="timeline-event">Creating businesses, adventures, and our family together</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-date">Wedding Day</div>
+                        <div class="timeline-event">December 27, 2025 - Our forever begins</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Wedding Details Section -->
+    <section id="details" class="details-section">
+        <div class="container">
+            <h2 class="section-title">Wedding Details</h2>
+            <div class="details-grid">
+                <div class="detail-card">
+                    <div class="detail-icon"><i class="material-icons">church</i></div>
+                    <h3>Ceremony</h3>
+                    <div class="detail-info">
+                        <p class="detail-venue">San Roque Parish Church</p>
+                        <p class="detail-address">Buncayo Park Subdivision, San Roque<br>San Pablo City, Laguna</p>
+                        <p class="detail-time">2:30 PM</p>
+            </div>
+          </div>
+                <div class="detail-card">
+                    <div class="detail-icon"><i class="material-icons">celebration</i></div>
+                    <h3>Reception</h3>
+                    <div class="detail-info">
+                        <p class="detail-venue">The Coco Palace</p>
+                        <p class="detail-address">Km 83 Maharlika Highway, Brgy. San Francisco Calihan<br>San Pablo City, Laguna</p>
+                        <p class="detail-time">Following Ceremony</p>
+            </div>
+            </div>
+                <div class="detail-card">
+                    <div class="detail-icon"><i class="material-icons">checkroom</i></div>
+                    <h3>Dress Code</h3>
+                    <div class="detail-info">
+                        <p class="detail-venue">Formal Attire</p>
+                        <p class="detail-description">We'd love to see you dressed up for our special day! Think elegant dresses and sharp suits.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Schedule Section -->
+    <section class="schedule-section">
+        <div class="container">
+            <h2 class="section-title">Wedding Day Schedule</h2>
+            <div class="schedule-timeline">
+                <div class="schedule-item">
+                    <div class="schedule-time">2:30 PM</div>
+                    <div class="schedule-event">
+                        <h4>Wedding Ceremony</h4>
+                        <p>Join us as we exchange vows at San Roque Parish Church</p>
+            </div>
+          </div>
+                <div class="schedule-item">
+                    <div class="schedule-time">4:00 PM</div>
+                    <div class="schedule-event">
+                        <h4>Cocktail Hour</h4>
+                        <p>Mingle with family and friends over drinks and appetizers</p>
+            </div>
+          </div>
+                <div class="schedule-item">
+                    <div class="schedule-time">5:00 PM</div>
+                    <div class="schedule-event">
+                        <h4>Reception Dinner</h4>
+                        <p>Enjoy a delicious meal and heartfelt toasts</p>
+            </div>
+          </div>
+                <div class="schedule-item">
+                    <div class="schedule-time">8:00 PM</div>
+                    <div class="schedule-event">
+                        <h4>Dancing & Celebration</h4>
+                        <p>Let's dance the night away!</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  
+            
+     
+    <!-- Venues Section -->
+    <section id="venues" class="venues-section">
+        <div class="container">
+            <h2 class="section-title">Wedding Venues</h2>
+            <p class="venues-subtitle">Join us at these beautiful locations for our special day</p>
+            
+            <div class="venues-grid">
+                <!-- Ceremony Venue -->
+                <div class="venue-card">
+                    <div class="venue-header">
+                        <h3 class="venue-title">Ceremony</h3>
+                        <div class="venue-time">2:30 PM</div>
+                    </div>
+                    
+                    <div class="venue-details">
+                        <h4 class="venue-name">San Roque Parish Church</h4>
+                        <p class="venue-address">
+                            <i class="material-icons venue-icon">location_on</i>
+                            Buncayo Park Subdivision, San Roque<br>
+                            San Pablo City, Laguna
+                        </p>
+
+                        <div class="venue-info">
+                            <div class="venue-info-item">
+                                <i class="material-icons venue-icon">local_parking</i>
+                                <span>Parking available in subdivision</span>
+              </div>
+                            <div class="venue-info-item">
+                                <i class="material-icons venue-icon">church</i>
+                                <span>Beautiful Catholic parish church</span>
+            </div>
+                            <div class="venue-info-item">
+                                <i class="material-icons venue-icon">music_note</i>
+                                <span>Traditional wedding ceremony</span>
+                  </div>
+                </div>
+              </div>
+                    
+                    <div class="venue-map-container" style="background-image: url('buncayo.jpg'); background-size: cover; background-position: center;">
+                        <div id="ceremony-map" class="venue-map" data-venue="ceremony"></div>
+                        <div class="map-info-panel" id="ceremony-info-panel">
+                            <div class="venue-info-header">
+                                <h3 class="venue-info-title">San Roque Parish Church</h3>
+                                <button class="venue-info-close" onclick="closeVenueInfo('ceremony')">&times;</button>
+                            </div>
+                            <div class="venue-info-content">
+                                <div class="venue-info-address">
+                                    <i class="material-icons venue-icon">location_on</i>
+                                    Buncayo Park Subdivision, San Roque<br>
+                                    San Pablo City, Laguna
+                                </div>
+                                <div class="venue-info-details">
+                                    <div class="venue-info-item">
+                                        <i class="material-icons venue-icon">local_parking</i>
+                                        <span>Parking available in subdivision</span>
+                                    </div>
+                                    <div class="venue-info-item">
+                                        <i class="material-icons venue-icon">church</i>
+                                        <span>Beautiful Catholic parish church</span>
+                                    </div>
+                                    <div class="venue-info-item">
+                                        <i class="material-icons venue-icon">music_note</i>
+                                        <span>Traditional wedding ceremony</span>
+                                    </div>
+                                </div>
+                                <div class="venue-info-actions">
+                                    <button class="btn btn-primary" onclick="getDirections('San Roque Parish Church, Buncayo Park Subdivision, San Roque, San Pablo City, Laguna')">
+                                        <i class="material-icons btn-icon">directions</i>
+                                        Get Directions
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Reception Venue -->
+                <div class="venue-card">
+                    <div class="venue-header">
+                        <h3 class="venue-title">Reception</h3>  
+                        <div class="venue-time">5:00 PM</div>
+              </div>
+
+                    <div class="venue-details">
+                        <h4 class="venue-name">The Coco Palace</h4>
+                        <p class="venue-address">
+                            <i class="material-icons venue-icon">location_on</i>
+                            Km 83 Maharlika Highway<br>
+                            Brgy. San Francisco Calihan, San Pablo City, Laguna
+                        </p>
+
+                        <div class="venue-info">
+                            <div class="venue-info-item">
+                                <i class="material-icons venue-icon">local_parking</i>
+                                <span>Ample parking available</span>
+            </div>
+                            <div class="venue-info-item">
+                                <i class="material-icons venue-icon">restaurant</i>
+                                <span>Reception dinner & celebration</span>
+                </div>
+                            <div class="venue-info-item">
+                                <i class="material-icons venue-icon">celebration</i>
+                                <span>Dancing and festivities</span>
+                  </div>
+                </div>
+              </div>
+
+                    <div class="venue-map-container" style="background-image: url('coco.jpg'); background-size: cover; background-position: center;">
+                        <div id="reception-map" class="venue-map" data-venue="reception"></div>
+                        <div class="map-info-panel" id="reception-info-panel">
+                            <div class="venue-info-header">
+                                <h3 class="venue-info-title">The Coco Palace</h3>
+                                <button class="venue-info-close" onclick="closeVenueInfo('reception')">&times;</button>
+                            </div>
+                            <div class="venue-info-content">
+                                <div class="venue-info-address">
+                                    <i class="material-icons venue-icon">location_on</i>
+                                    Km 83 Maharlika Highway<br>
+                                    Brgy. San Francisco Calihan, San Pablo City, Laguna
+                                </div>
+                                <div class="venue-info-details">
+                                    <div class="venue-info-item">
+                                        <i class="material-icons venue-icon">local_parking</i>
+                                        <span>Ample parking available</span>
+                                    </div>
+                                    <div class="venue-info-item">
+                                        <i class="material-icons venue-icon">restaurant</i>
+                                        <span>Reception dinner & celebration</span>
+                                    </div>
+                                    <div class="venue-info-item">
+                                        <i class="material-icons venue-icon">celebration</i>
+                                        <span>Dancing and festivities</span>
+                                    </div>
+                                </div>
+                                <div class="venue-info-actions">
+                                    <button class="btn btn-primary" onclick="getDirections('Km 83 Maharlika Highway, Brgy. San Francisco Calihan, San Pablo City, Laguna')">
+                                        <i class="material-icons btn-icon">directions</i>
+                                        Get Directions
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+          </div>
+        </div>
+            
+            <!-- Additional Information -->
+            <div class="venues-additional-info">
+                <div class="info-card">
+                    <h4 class="info-title"><i class="material-icons">hotel</i> Nearby Hotels</h4>
+                    <ul class="info-list">
+                        <li><strong>Hotel Palawan</strong></li>
+                        <li><strong>The Coco Palace Hotel</strong> </li>
+                        <li><strong>Local Inns & Resorts</strong> </li>
+                        
+                    </ul>
+                </div>
+                
+                <div class="info-card">
+                    <h4 class="info-title"><i class="material-icons">directions_bus</i> Transportation</h4>
+                    <ul class="info-list">
+                        <li><strong>Private Vehicles</strong> - Most convenient option</li>
+                        <li><strong>Jeepneys & Tricycles</strong> - Local public transport</li>
+                        <li><strong>Grab</strong> - Available in San Pablo City</li>
+                    </ul>
+                </div>
+                
+                <div class="info-card">
+                    <h4 class="info-title"><i class="material-icons">restaurant</i> Local Dining</h4>
+                    <ul class="info-list">
+                        <li><strong>Local Restaurants</strong> - San Pablo City specialties</li>
+                        <li><strong>Buko Pie Shops</strong> - Famous Laguna delicacy</li>
+                        <li><strong>Kapeng Barako</strong> - Local coffee shops</li>
+                    </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section id="faq" class="faq-section">
+        <div class="container">
+            <h2 class="section-title">Frequently Asked Questions</h2>
+            <p class="faq-subtitle">Everything you need to know about our special day</p>
+
+            <div class="faq-container">
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h3>What's the dress code for the wedding?</h3>
+                        <span class="material-icons faq-toggle" aria-expanded="false">expand_more</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>We're requesting formal attire for our special day. Think elegant dresses for the ladies and sharp suits or dress shirts with ties for the gentlemen. We'd love to see you dressed up to celebrate with us!</p>
+                    </div>
+                </div>
+
+                <!-- <div class="faq-item">
+                    <div class="faq-question">
+                        <h3>Are children welcome at the ceremony and reception?</h3>
+                        <span class="material-icons faq-toggle" aria-expanded="false">expand_more</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Yes! We love having children join us for the celebration. Please let us know in your RSVP if you'll be bringing little ones so we can make appropriate arrangements.</p>
+                    </div>
+                </div> -->
+
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h3>What's the parking situation at the venues?</h3>
+                        <span class="material-icons faq-toggle" aria-expanded="false">expand_more</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Both venues have ample parking available. At San Roque Parish Church, you can park in the subdivision area. The Coco Palace has a large parking lot right at the venue.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h3>Can I bring a plus-one?</h3>
+                        <span class="material-icons faq-toggle" aria-expanded="false">expand_more</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Please check your invitation for plus-one details. If you're unsure, feel free to reach out to us directly. We're happy to accommodate where possible!</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h3>What should I do if I have dietary restrictions?</h3>
+                        <span class="material-icons faq-toggle" aria-expanded="false">expand_more</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Please indicate any dietary restrictions or allergies in your RSVP form. We'll make sure our caterer can accommodate your needs so everyone can enjoy the celebration safely.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h3>Will there be transportation between venues?</h3>
+                        <span class="material-icons faq-toggle" aria-expanded="false">expand_more</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>The ceremony and reception venues are approximately 15 minutes apart. Many guests choose to drive their own vehicles or carpool. Ride-sharing services like Grab are also available in San Pablo City.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h3>What time should I arrive?</h3>
+                        <span class="material-icons faq-toggle" aria-expanded="false">expand_more</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Please arrive at the church by 2:00 PM to be seated before the 2:30 PM ceremony begins. The reception will start immediately following the ceremony around 2:30 PM.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h3>Can I take photos during the church ceremony?</h3>
+                        <span class="material-icons faq-toggle" aria-expanded="false">expand_more</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>To respect the solemnity of the ceremony, we kindly ask that guests refrain from taking photos during the ceremony itself. Our professional photographer will capture all the special moments, and we'll be happy to share the photos with you afterward!</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h3>What's the best way to get to San Pablo City?</h3>
+                        <span class="material-icons faq-toggle" aria-expanded="false">expand_more</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>San Pablo City is easily accessible by car via the South Luzon Expressway (SLEX). It's about 1.5-2 hours from Manila depending on traffic. You can also take buses from various terminals in Metro Manila.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h3>Will there be accommodations for out-of-town guests?</h3>
+                        <span class="material-icons faq-toggle" aria-expanded="false">expand_more</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>While we don't have a formal hotel block, there are several excellent hotels in San Pablo City including Hotel Palawan and various resorts. We've included a list of recommended accommodations in the venues section.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- RSVP Section -->
+    <section id="rsvp" class="rsvp-section">
+        <div class="container">
+            <div class="rsvp-content">
+                <h2 class="section-title">Please Respond</h2>
+                <p class="rsvp-subtitle">We can't wait to celebrate with you! Please respond by December 1, 2025</p>
+                
+                <div class="rsvp-form-container">
+                    <div class="form-header">
+                        <div class="form-icon"><i class="material-icons">mail</i></div>
+                        <h3>Wedding RSVP</h3>
+                        <p>Your response helps us plan the perfect day</p>
+                    </div>
+
+                    <!-- Loading State -->
+                    <div class="form-loading" id="formLoading" style="display: none;">
+                        <div class="loading-spinner"></div>
+                        <p>Loading RSVP form...</p>
+                    </div>
+
+                    <!-- Error State -->
+                    <div class="form-error" id="formError" style="display: none;">
+                        <div class="material-icons error-icon">warning</div>
+                        <h4>Unable to Load Form</h4>
+                        <p>There was an issue loading the RSVP form. Please try refreshing the page or use the alternative link below.</p>
+                        <button class="btn btn-primary" onclick="window.open('https://forms.gle/AoFihXFKErGzpoFq7', '_blank')">
+                            Open Form in New Window
+                        </button>
+                    </div>
+
+                    <!-- Form Container -->
+                    <div class="iframe-container" id="iframeContainer">
+                        <div class="form-controls">
+                            <button id="expandFormBtn" class="expand-btn" aria-label="Expand or collapse RSVP form">
+                                <span class="btn-text">Expand Form</span>
+                                <span class="material-icons btn-icon">expand_more</span>
+                            </button>
+                            <div class="form-status" id="formStatus"></div>
+                        </div>
+                        <iframe
+                            src="https://docs.google.com/forms/d/e/1FAIpQLSd3trdiSfsl96HroxLKIuuG7pvwy9QT48buRymdlanLjFg2qQ/viewform?embedded=true"
+                            class="rsvp-iframe"
+                            id="rsvpIframe"
+                            width="100%"
+                            height="800"
+                            frameborder="0"
+                            marginheight="0"
+                            marginwidth="0"
+                            aria-label="Wedding RSVP Form"
+                            loading="lazy">
+                            <p class="fallback-message">Loading RSVP form...</p>
+                        </iframe>
+                        <div class="iframe-scroll-hint">
+                            <p>Scroll within the form to see all questions • Or expand for full view</p>
+                        </div>
+                    </div>
+
+                    <!-- Success Message -->
+                    <div class="form-success" id="formSuccess" style="display: none;">
+                        <div class="success-icon">✅</div>
+                        <h4>Thank You!</h4>
+                        <p>Your RSVP has been successfully submitted. We're excited to celebrate with you!</p>
+                        <div class="success-actions">
+                            <button class="btn btn-secondary" onclick="location.reload()">
+                                Submit Another Response
+                            </button>
+                            <button class="btn btn-outline" onclick="scrollToTop()">
+                                Back to Top
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="form-footer">
+                        <p>Having trouble with the form? <a href="https://forms.gle/AoFihXFKErGzpoFq7" target="_blank" class="form-link">Open in new window</a></p>
+                    </div>
+                </div>
+                
+                <div class="rsvp-details">
+                    <div class="detail-card">
+                        <div class="detail-icon"><i class="material-icons">event</i></div>
+                        <h4>RSVP Deadline</h4>
+                        <p>December 1, 2025</p>
+                    </div>
+                    <div class="detail-card">
+                        <div class="detail-icon"><i class="material-icons">phone</i></div>
+                        <h4>Questions?</h4>
+                        <p>Contact us if you need help</p>
+                    </div>
+                    <div class="detail-card">
+                        <div class="detail-icon"><i class="material-icons">celebration</i></div>
+                        <h4>Can't Wait!</h4>
+                        <p>We're so excited to celebrate with you</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <h3>Noriel & Gloria</h3>
+                    <p>December 27, 2025</p>
+            </div>
+                <div class="footer-links">
+                    <a href="#home">Home</a>
+                    <a href="#story">Our Story</a>
+                    <a href="#details">Details</a>
+                    <a href="#rsvp">RSVP</a>
+          </div>
+        </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 Noriel & Gloria Wedding. Made with <i class="material-icons">favorite</i></p>
+      </div>
+    </div>
+    </footer>
+
+    <script src="js/countdown.js"></script>
+    <script src="js/video-player.js"></script>
+    <script src="js/hero-slideshow.js"></script>
+    <script src="js/maps.js"></script>
+    <script src="js/rsvp-form.js"></script>
+    <script src="js/script.js"></script>
+  </body>
+</html>

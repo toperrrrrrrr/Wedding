@@ -263,6 +263,9 @@
     flex: 0 0 140px;
     flex-shrink: 0;
     text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .schedule-event {
@@ -1847,6 +1850,9 @@ textarea {
         align-self: stretch;
         text-align: center;
         padding: 1rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
 
     .schedule-event {

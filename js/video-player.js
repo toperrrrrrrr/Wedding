@@ -416,19 +416,46 @@
             return;
         }
 
-        // Always unmute when in video section, otherwise check user interaction
+        // Handle Vimeo iframe vs HTML5 video differently
         try {
-            if (isInVideoSection) {
-                videoElement.muted = false;
-                videoElement.volume = 0.01; // Always start at 1% volume in video section
-                console.log('Playing with audio at 1% volume (in video section)');
-            } else if (hasUserInteracted) {
-                videoElement.muted = false;
-                videoElement.volume = 0.01; // Always start at 1% volume
-                console.log('Playing with audio at 1% volume (user has interacted)');
+            if (videoElement.tagName === 'IFRAME') {
+                // Vimeo iframe - modify src to control muting
+                if (isInVideoSection) {
+                    const currentSrc = videoElement.src;
+                    if (currentSrc.includes('muted=1')) {
+                        const newSrc = currentSrc.replace('muted=1', 'muted=0');
+                        videoElement.src = newSrc;
+                        console.log('Vimeo iframe unmuted for video section');
+                    }
+                } else if (hasUserInteracted) {
+                    const currentSrc = videoElement.src;
+                    if (currentSrc.includes('muted=1')) {
+                        const newSrc = currentSrc.replace('muted=1', 'muted=0');
+                        videoElement.src = newSrc;
+                        console.log('Vimeo iframe unmuted for user interaction');
+                    }
+                } else {
+                    const currentSrc = videoElement.src;
+                    if (currentSrc.includes('muted=0')) {
+                        const newSrc = currentSrc.replace('muted=0', 'muted=1');
+                        videoElement.src = newSrc;
+                        console.log('Vimeo iframe muted for autoplay policy');
+                    }
+                }
             } else {
-                videoElement.muted = true;
-                console.log('Playing muted (no user interaction yet)');
+                // Regular HTML5 video element
+                if (isInVideoSection) {
+                    videoElement.muted = false;
+                    videoElement.volume = 0.01; // Always start at 1% volume in video section
+                    console.log('Playing with audio at 1% volume (in video section)');
+                } else if (hasUserInteracted) {
+                    videoElement.muted = false;
+                    videoElement.volume = 0.01; // Always start at 1% volume
+                    console.log('Playing with audio at 1% volume (user has interacted)');
+                } else {
+                    videoElement.muted = true;
+                    console.log('Playing muted (no user interaction yet)');
+                }
             }
         } catch (error) {
             console.warn('Error setting video properties:', error.message);
@@ -442,7 +469,24 @@
                 updatePlayButton(false);
 
                 // If we started muted but user has now interacted, unmute
-                if (videoElement.muted && hasUserInteracted) {
+                if (videoElement.tagName === 'IFRAME') {
+                    // Vimeo iframe - modify src to unmute
+                    if (hasUserInteracted) {
+                        setTimeout(() => {
+                            try {
+                                const currentSrc = videoElement.src;
+                                if (currentSrc.includes('muted=1')) {
+                                    const newSrc = currentSrc.replace('muted=1', 'muted=0');
+                                    videoElement.src = newSrc;
+                                    console.log('Vimeo iframe unmuted after user interaction');
+                                }
+                            } catch (error) {
+                                console.warn('Error unmuting Vimeo iframe:', error.message);
+                            }
+                        }, 100);
+                    }
+                } else if (videoElement.muted && hasUserInteracted) {
+                    // Regular HTML5 video element
                     setTimeout(() => {
                         try {
                             videoElement.muted = false;
@@ -571,9 +615,22 @@
         // Hide navbar
         document.body.classList.add('video-section-active');
         
-        // Unmute and set initial volume to exactly 1%
+        // For Vimeo iframe, we need to modify the src to remove muted parameter
         const videoElement = getVideoElement();
-        if (videoElement) {
+        if (videoElement && videoElement.tagName === 'IFRAME') {
+            try {
+                // Vimeo iframe - modify src to remove muted parameter when entering video section
+                const currentSrc = videoElement.src;
+                if (currentSrc.includes('muted=1')) {
+                    const newSrc = currentSrc.replace('muted=1', 'muted=0');
+                    videoElement.src = newSrc;
+                    console.log('Vimeo iframe unmuted by modifying src');
+                }
+            } catch (error) {
+                console.warn('Error modifying Vimeo iframe src:', error.message);
+            }
+        } else if (videoElement) {
+            // Regular HTML5 video element
             try {
                 videoElement.muted = false;
                 videoElement.volume = 0.01; // Force 1% volume
@@ -612,9 +669,20 @@
         const videoElement = getVideoElement();
         if (videoElement) {
             try {
-                videoElement.muted = true;
-                videoElement.volume = baseVolume;
-                console.log('Video muted and volume reset');
+                if (videoElement.tagName === 'IFRAME') {
+                    // Vimeo iframe - modify src to mute when leaving video section
+                    const currentSrc = videoElement.src;
+                    if (currentSrc.includes('muted=0')) {
+                        const newSrc = currentSrc.replace('muted=0', 'muted=1');
+                        videoElement.src = newSrc;
+                        console.log('Vimeo iframe muted when exiting video section');
+                    }
+                } else {
+                    // Regular HTML5 video element
+                    videoElement.muted = true;
+                    videoElement.volume = baseVolume;
+                    console.log('Video muted and volume reset');
+                }
             } catch (error) {
                 console.warn('Error setting video properties in exitVideoSection:', error.message);
             }
@@ -645,8 +713,14 @@
                 const videoElement = getVideoElement();
                 if (videoElement && !videoElement.paused) {
                     try {
-                        videoElement.volume = newVolume;
-                        console.log(`Time in section: ${timeInVideoSection.toFixed(1)}s, Volume: ${(newVolume * 100).toFixed(1)}%`);
+                        if (videoElement.tagName === 'IFRAME') {
+                            // Vimeo iframe - volume can't be controlled directly, but we can log the intended volume
+                            console.log(`Time in section: ${timeInVideoSection.toFixed(1)}s, Intended Volume: ${(newVolume * 100).toFixed(1)}% (Vimeo iframe)`);
+                        } else {
+                            // Regular HTML5 video element
+                            videoElement.volume = newVolume;
+                            console.log(`Time in section: ${timeInVideoSection.toFixed(1)}s, Volume: ${(newVolume * 100).toFixed(1)}%`);
+                        }
                     } catch (error) {
                         console.warn('Error setting volume in timer:', error.message);
                     }
@@ -849,9 +923,20 @@
             if (videoElement) {
                 console.log('Testing audio...');
                 try {
-                    videoElement.muted = false;
-                    videoElement.volume = 0.8;
-                    console.log('Video muted:', videoElement.muted, 'Volume:', videoElement.volume);
+                    if (videoElement.tagName === 'IFRAME') {
+                        // Vimeo iframe - modify src to unmute and set volume
+                        const currentSrc = videoElement.src;
+                        if (currentSrc.includes('muted=1')) {
+                            const newSrc = currentSrc.replace('muted=1', 'muted=0');
+                            videoElement.src = newSrc;
+                            console.log('Vimeo iframe unmuted for audio test');
+                        }
+                    } else {
+                        // Regular HTML5 video element
+                        videoElement.muted = false;
+                        videoElement.volume = 0.8;
+                        console.log('Video muted:', videoElement.muted, 'Volume:', videoElement.volume);
+                    }
                     if (videoElement.paused) {
                         playVideo();
                     }
@@ -883,9 +968,13 @@
             const rect = videoSection ? videoSection.getBoundingClientRect() : null;
             const videoElement = getVideoElement();
             console.log('Video player status:', {
-                videoPaused: videoElement ? videoElement.paused : 'no video',
-                videoMuted: videoElement ? videoElement.muted : 'no video',
-                videoVolume: videoElement ? `${(videoElement.volume * 100).toFixed(1)}%` : 'no video',
+                videoPaused: videoElement ? (videoElement.paused !== undefined ? videoElement.paused : 'N/A (iframe)') : 'no video',
+                videoMuted: videoElement ?
+                    (videoElement.tagName === 'IFRAME' ?
+                        (videoElement.src.includes('muted=1') ? 'true' : 'false') :
+                        videoElement.muted) : 'no video',
+                videoVolume: videoElement ?
+                    (videoElement.tagName === 'IFRAME' ? 'N/A (iframe)' : `${(videoElement.volume * 100).toFixed(1)}%`) : 'no video',
                 videoReadyState: videoElement ? videoElement.readyState : 'no video',
                 isScrolling: isScrolling,
                 isInVideoSection: isInVideoSection,

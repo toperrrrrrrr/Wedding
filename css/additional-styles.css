@@ -3933,6 +3933,8 @@ textarea {
     padding: 3rem 2rem;
     background: var(--white);
     text-align: center;
+    min-height: 200px;
+    position: relative;
 }
 
 .loading-spinner {
@@ -3943,6 +3945,18 @@ textarea {
     border-radius: 50%;
     animation: spin 1s linear infinite;
     margin-bottom: 1rem;
+}
+
+.loading-progress {
+    margin-top: 1rem;
+    font-size: 0.9rem;
+    color: var(--text-light);
+    opacity: 0.8;
+}
+
+.loading-progress .attempt-count {
+    font-weight: 600;
+    color: var(--primary-color);
 }
 
 @keyframes spin {

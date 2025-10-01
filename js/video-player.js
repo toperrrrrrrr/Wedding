@@ -290,10 +290,10 @@
                 if (entry.isIntersecting && entry.intersectionRatio >= 0.5) {
                     // Video section is sufficiently in view (50% or more)
                     console.log('Video section in view - attempting to play');
-                    
-                    // Enter video section
+
+                    // Enter video section (this unmutes the video)
                     enterVideoSection();
-                    
+
                     // More aggressive auto-play logic
                     const videoElement = getVideoElement();
                     if (videoElement && videoElement.paused) {
@@ -416,9 +416,13 @@
             return;
         }
 
-        // Try to play with audio if user has interacted, otherwise start muted
+        // Always unmute when in video section, otherwise check user interaction
         try {
-            if (hasUserInteracted) {
+            if (isInVideoSection) {
+                videoElement.muted = false;
+                videoElement.volume = 0.01; // Always start at 1% volume in video section
+                console.log('Playing with audio at 1% volume (in video section)');
+            } else if (hasUserInteracted) {
                 videoElement.muted = false;
                 videoElement.volume = 0.01; // Always start at 1% volume
                 console.log('Playing with audio at 1% volume (user has interacted)');

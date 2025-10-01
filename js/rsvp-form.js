@@ -99,75 +99,93 @@
                 iframe.removeEventListener('load', loadHandler);
                 iframe.removeEventListener('error', errorHandler);
 
-                // Try alternative detection method - check if iframe content is accessible
-                checkIframeContentLoaded(iframe).then(() => {
-                    console.log('✅ Alternative detection: iframe content appears loaded');
+                // Try alternative detection method - use MutationObserver on container
+                checkIframeContainerChanges(iframe).then(() => {
+                    console.log('✅ Alternative detection: iframe container changes detected');
                     handleFormLoad();
-                }).catch(() => {
-                    console.log('❌ Alternative detection failed');
+                }).catch((error) => {
+                    console.log('❌ Alternative detection failed:', error.message);
+                    // If alternative detection fails, still try to handle timeout
+                    // This prevents infinite retries when CORS blocks content access
                     handleFormTimeout();
                 });
             }
         }, timeoutDuration);
     }
 
-    // Alternative iframe content detection method
-    function checkIframeContentLoaded(iframe) {
+    // Alternative iframe detection method using container observation
+    function checkIframeContainerChanges(iframe) {
         return new Promise((resolve, reject) => {
             try {
-                // Try to access iframe content document
-                const iframeDoc = iframe.contentDocument || iframe.contentWindow?.document;
-
-                if (iframeDoc) {
-                    // Check if document is ready and has content
-                    if (iframeDoc.readyState === 'complete' || iframeDoc.readyState === 'interactive') {
-                        // Look for form elements or Google Forms specific content
-                        const hasFormContent = iframeDoc.querySelector('form') ||
-                                             iframeDoc.querySelector('[data-form-id]') ||
-                                             iframeDoc.querySelector('.freebird') ||
-                                             iframeDoc.body?.innerHTML?.includes('form');
-
-                        if (hasFormContent) {
-                            console.log('✅ Iframe content detected via alternative method');
-                            resolve();
-                            return;
-                        }
-                    }
-
-                    // Set up a mutation observer to detect content changes
-                    const observer = new MutationObserver((mutations) => {
-                        mutations.forEach((mutation) => {
-                            if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
-                                const hasFormContent = iframeDoc.querySelector('form') ||
-                                                     iframeDoc.querySelector('[data-form-id]') ||
-                                                     iframeDoc.querySelector('.freebird') ||
-                                                     iframeDoc.body?.innerHTML?.includes('form');
-
-                                if (hasFormContent) {
-                                    console.log('✅ Iframe content detected via mutation observer');
-                                    observer.disconnect();
-                                    resolve();
-                                }
-                            }
-                        });
-                    });
-
-                    observer.observe(iframeDoc.body || iframeDoc, {
-                        childList: true,
-                        subtree: true
-                    });
-
-                    // Timeout for observer (3 seconds)
-                    setTimeout(() => {
-                        observer.disconnect();
-                        reject(new Error('Iframe content detection timeout'));
-                    }, 3000);
-
-                } else {
-                    reject(new Error('Cannot access iframe content'));
+                const container = iframe.parentElement;
+                if (!container) {
+                    reject(new Error('Iframe container not found'));
+                    return;
                 }
+
+                // Check if iframe has loaded by examining its properties
+                // Google Forms iframes typically have scrollHeight > 0 when loaded
+                if (iframe.scrollHeight > 100) {
+                    console.log('✅ Iframe appears loaded (scrollHeight > 100)');
+                    resolve();
+                    return;
+                }
+
+                // Set up a mutation observer on the container to detect changes
+                const observer = new MutationObserver((mutations) => {
+                    mutations.forEach((mutation) => {
+                        // Look for changes that might indicate the iframe has loaded
+                        if (mutation.type === 'attributes' && mutation.attributeName === 'style') {
+                            // Check if iframe became visible or got content
+                            if (iframe.scrollHeight > 100 || iframe.offsetHeight > 100) {
+                                console.log('✅ Iframe loaded detected via container mutation');
+                                observer.disconnect();
+                                resolve();
+                            }
+                        } else if (mutation.type === 'childList') {
+                            // Check if iframe dimensions changed significantly
+                            if (iframe.scrollHeight > 100 || iframe.offsetHeight > 100) {
+                                console.log('✅ Iframe loaded detected via child list mutation');
+                                observer.disconnect();
+                                resolve();
+                            }
+                        }
+                    });
+                });
+
+                // Observe both attributes and child list changes
+                observer.observe(container, {
+                    attributes: true,
+                    attributeFilter: ['style'],
+                    childList: true,
+                    subtree: true
+                });
+
+                // Also set up a polling mechanism as backup
+                let pollCount = 0;
+                const pollInterval = setInterval(() => {
+                    pollCount++;
+                    if (iframe.scrollHeight > 100 || iframe.offsetHeight > 100) {
+                        console.log('✅ Iframe loaded detected via polling');
+                        observer.disconnect();
+                        clearInterval(pollInterval);
+                        resolve();
+                    } else if (pollCount >= 30) { // 3 seconds at 100ms intervals
+                        observer.disconnect();
+                        clearInterval(pollInterval);
+                        reject(new Error('Iframe container detection timeout'));
+                    }
+                }, 100);
+
+                // Overall timeout for the entire detection process
+                setTimeout(() => {
+                    observer.disconnect();
+                    clearInterval(pollInterval);
+                    reject(new Error('Iframe detection overall timeout'));
+                }, 5000);
+
             } catch (error) {
-                console.log('Alternative detection method failed:', error.message);
+                console.log('Container detection method failed:', error.message);
                 reject(error);
             }
         });

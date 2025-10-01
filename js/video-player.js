@@ -18,17 +18,41 @@
     let hasUserInteracted = false;
     let progressBarVisible = true;
     let progressBarTimeout = null;
+    let videoElementCheckInterval = null;
     
     // Helper function to safely get video element
     function getVideoElement() {
-        if (!video || !video.tagName || video.tagName !== 'VIDEO') {
-            console.log('Video element lost, re-acquiring...');
-            video = document.getElementById('wedding-video');
-            if (!video) {
-                console.warn('Video element not found');
+        // Check if current video reference is still valid
+        if (video && video.tagName === 'VIDEO' && document.contains(video)) {
+            return video;
+        }
+
+        console.log('Video element lost, re-acquiring...');
+
+        // Try to find the video element
+        video = document.getElementById('wedding-video');
+
+        if (video) {
+            console.log('✅ Video element re-acquired successfully');
+            // Verify it's a proper video element
+            if (video.tagName !== 'VIDEO') {
+                console.warn('⚠️ Found element with ID "wedding-video" but it\'s not a VIDEO element:', video.tagName);
+                return null;
+            }
+        } else {
+            console.warn('❌ Video element not found in DOM');
+
+            // Try to find any video element as fallback
+            const allVideos = document.querySelectorAll('video');
+            if (allVideos.length > 0) {
+                console.log('🔄 Found', allVideos.length, 'video elements, using first one');
+                video = allVideos[0];
+            } else {
+                console.warn('❌ No video elements found in DOM');
                 return null;
             }
         }
+
         return video;
     }
 
@@ -59,11 +83,37 @@
             console.log('Video element not found - video player disabled');
             return;
         }
-        
+
         // Set up event listeners
         setupVideoEvents();
         setupScrollEvents();
         setupIntersectionObserver();
+
+        // Start periodic video element validation
+        startVideoElementCheck();
+    }
+
+    function startVideoElementCheck() {
+        if (videoElementCheckInterval) {
+            clearInterval(videoElementCheckInterval);
+        }
+
+        // Check every 5 seconds if video element is still valid
+        videoElementCheckInterval = setInterval(() => {
+            const videoElement = getVideoElement();
+            if (!videoElement) {
+                console.warn('🚨 Video element check failed - element lost from DOM');
+                // Try to reinitialize if video element is completely lost
+                initializeVideoPlayer();
+            }
+        }, 5000);
+    }
+
+    function stopVideoElementCheck() {
+        if (videoElementCheckInterval) {
+            clearInterval(videoElementCheckInterval);
+            videoElementCheckInterval = null;
+        }
     }
     
     function setupVideoEvents() {
@@ -375,15 +425,29 @@
     
     function pauseVideo() {
         const videoElement = getVideoElement();
-        if (videoElement && typeof videoElement.pause === 'function') {
-            try {
+        if (!videoElement) {
+            console.warn('Cannot pause: video element not available');
+            return;
+        }
+
+        if (typeof videoElement.pause !== 'function') {
+            console.warn('Cannot pause: pause method not available on video element');
+            return;
+        }
+
+        try {
+            // Check if video is actually playing before trying to pause
+            if (!videoElement.paused) {
                 videoElement.pause();
                 updatePlayButton(true);
-            } catch (error) {
-                console.warn('Pause video error:', error.message);
+                console.log('✅ Video paused successfully');
+            } else {
+                console.log('ℹ️ Video already paused, no action needed');
             }
-        } else {
-            console.warn('Video element or pause method not available');
+        } catch (error) {
+            console.warn('❌ Pause video error:', error.message);
+            // Try to update button state anyway
+            updatePlayButton(true);
         }
     }
     
@@ -705,6 +769,7 @@
     function cleanup() {
         stopVideoSectionTimer();
         exitVideoSection();
+        stopVideoElementCheck();
     }
     
     // Initialize when DOM is ready

@@ -98,9 +98,79 @@
                 // Remove listeners before timeout handling
                 iframe.removeEventListener('load', loadHandler);
                 iframe.removeEventListener('error', errorHandler);
-                handleFormTimeout();
+
+                // Try alternative detection method - check if iframe content is accessible
+                checkIframeContentLoaded(iframe).then(() => {
+                    console.log('✅ Alternative detection: iframe content appears loaded');
+                    handleFormLoad();
+                }).catch(() => {
+                    console.log('❌ Alternative detection failed');
+                    handleFormTimeout();
+                });
             }
         }, timeoutDuration);
+    }
+
+    // Alternative iframe content detection method
+    function checkIframeContentLoaded(iframe) {
+        return new Promise((resolve, reject) => {
+            try {
+                // Try to access iframe content document
+                const iframeDoc = iframe.contentDocument || iframe.contentWindow?.document;
+
+                if (iframeDoc) {
+                    // Check if document is ready and has content
+                    if (iframeDoc.readyState === 'complete' || iframeDoc.readyState === 'interactive') {
+                        // Look for form elements or Google Forms specific content
+                        const hasFormContent = iframeDoc.querySelector('form') ||
+                                             iframeDoc.querySelector('[data-form-id]') ||
+                                             iframeDoc.querySelector('.freebird') ||
+                                             iframeDoc.body?.innerHTML?.includes('form');
+
+                        if (hasFormContent) {
+                            console.log('✅ Iframe content detected via alternative method');
+                            resolve();
+                            return;
+                        }
+                    }
+
+                    // Set up a mutation observer to detect content changes
+                    const observer = new MutationObserver((mutations) => {
+                        mutations.forEach((mutation) => {
+                            if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
+                                const hasFormContent = iframeDoc.querySelector('form') ||
+                                                     iframeDoc.querySelector('[data-form-id]') ||
+                                                     iframeDoc.querySelector('.freebird') ||
+                                                     iframeDoc.body?.innerHTML?.includes('form');
+
+                                if (hasFormContent) {
+                                    console.log('✅ Iframe content detected via mutation observer');
+                                    observer.disconnect();
+                                    resolve();
+                                }
+                            }
+                        });
+                    });
+
+                    observer.observe(iframeDoc.body || iframeDoc, {
+                        childList: true,
+                        subtree: true
+                    });
+
+                    // Timeout for observer (3 seconds)
+                    setTimeout(() => {
+                        observer.disconnect();
+                        reject(new Error('Iframe content detection timeout'));
+                    }, 3000);
+
+                } else {
+                    reject(new Error('Cannot access iframe content'));
+                }
+            } catch (error) {
+                console.log('Alternative detection method failed:', error.message);
+                reject(error);
+            }
+        });
     }
 
     function handleFormLoad() {

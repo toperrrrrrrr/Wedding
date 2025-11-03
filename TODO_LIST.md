@@ -118,12 +118,30 @@
 
 ---
 
-## 📋 **Next Steps**
-1. Fix critical map functionality
-2. Resolve image gallery issues
-3. Update broken image paths
-4. Implement dress code specification
-5. Add actual gallery images
-6. Test all functionality
+## 📋 **Next Steps - Priority Order**
+
+### Immediate Fixes Needed:
+1. ✅ **Maps display correctly** - Using iframe embeds (working)
+2. 🔧 **Clean up maps.js** - Remove unused JavaScript (causing console errors)
+3. 🔧 **Fix video-player.js errors** - querySelector errors on line 552
+4. 🔧 **Update monitor-website.js** - Maps monitoring looking for wrong elements
+5. 🔴 **Fix image gallery** - Missing 100+ images
+6. 🟡 **Update dress code** - Add earth tones specification
+7. 🟡 **Mobile testing** - Ensure all features work on mobile
+8. 🟢 **Performance optimization** - Image compression, lazy loading
+
+### Console Errors to Fix:
+1. **video-player.js:552** - `Cannot read properties of null (reading 'querySelector')`
+   - Occurs in `updatePlayButton` function
+   - Related to video controls that don't exist for iframe
+   
+2. **maps.js:72** - Map containers not found
+   - Looking for `ceremony-map` and `reception-map` divs
+   - These don't exist anymore (using iframes now)
+   - Solution: Remove or disable maps.js
+
+3. **monitor-website.js** - Maps showing as ERROR
+   - Checking for old map div elements
+   - Need to update to check for iframe elements instead
 
 **Last Updated:** November 3, 2025

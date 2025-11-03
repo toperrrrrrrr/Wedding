@@ -69,26 +69,26 @@
         },
 
         checkMaps: function() {
-            const ceremonyMap = document.getElementById('ceremony-map');
-            const receptionMap = document.getElementById('reception-map');
-            const apiKey = window.googleMapsApiKey;
+            // Check for iframe maps (new implementation)
+            const mapIframes = document.querySelectorAll('.venue-map-iframe');
+            const ceremonyIframe = mapIframes[0];
+            const receptionIframe = mapIframes[1];
 
             const oldStatus = this.components.maps.status;
 
             this.components.maps.details = {
-                ceremonyElement: !!ceremonyMap,
-                receptionElement: !!receptionMap,
-                apiKey: apiKey,
-                apiKeyValid: apiKey !== 'YOUR_GOOGLE_MAPS_API_KEY',
-                ceremonyHasContent: ceremonyMap ? ceremonyMap.children.length > 0 : false,
-                receptionHasContent: receptionMap ? receptionMap.children.length > 0 : false,
-                googleLoaded: typeof google !== 'undefined',
-                mapsApiLoaded: typeof google !== 'undefined' && typeof google.maps !== 'undefined'
+                usingIframes: true,
+                ceremonyElement: !!ceremonyIframe,
+                receptionElement: !!receptionIframe,
+                totalMapIframes: mapIframes.length,
+                ceremonyHasSrc: ceremonyIframe ? !!ceremonyIframe.src : false,
+                receptionHasSrc: receptionIframe ? !!receptionIframe.src : false
             };
 
-            if (this.components.maps.details.ceremonyHasContent && this.components.maps.details.receptionHasContent) {
+            // Check if both iframes exist and have sources
+            if (ceremonyIframe && receptionIframe && ceremonyIframe.src && receptionIframe.src) {
                 this.components.maps.status = 'healthy';
-            } else if (this.components.maps.details.ceremonyElement && this.components.maps.details.receptionElement) {
+            } else if (mapIframes.length > 0) {
                 this.components.maps.status = 'loading';
             } else {
                 this.components.maps.status = 'error';

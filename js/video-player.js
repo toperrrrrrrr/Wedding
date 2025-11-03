@@ -49,10 +49,15 @@
             return video;
         }
 
-        if (foundVideo) {
-            console.warn('⚠️ Element with ID "wedding-video" exists but is not a VIDEO element:', foundVideo.tagName);
+        if (foundVideo && foundVideo.tagName === 'IFRAME') {
+            // Silently return null for iframe embeds (Vimeo/YouTube)
+            return null;
+        } else if (foundVideo) {
+            // Found element but it's not video or iframe
+            return null;
         } else {
-            console.warn('❌ Video element with ID "wedding-video" not found');
+            // No video element found - normal for iframe-only pages
+            return null;
 
             // Try to find any video element as fallback
             const allVideos = document.querySelectorAll('video');
@@ -513,21 +518,21 @@
     function pauseVideo() {
         const videoElement = getVideoElement();
         if (!videoElement) {
-            console.warn('Cannot pause: video element not available');
-            updatePlayButton(true); // Update UI to show paused state
+            // Silently return - video element not available (normal for iframe videos)
+            updatePlayButton(true);
             return;
         }
 
         try {
             // Validate that this is actually a video element
             if (videoElement.tagName !== 'VIDEO') {
-                console.warn('Cannot pause: element is not a video element');
+                // Silently return - not a video element (iframe embed)
                 updatePlayButton(true);
                 return;
             }
 
             if (typeof videoElement.pause !== 'function') {
-                console.warn('Cannot pause: pause method not available on video element');
+                // Silently return - pause method not available
                 updatePlayButton(true);
                 return;
             }
@@ -549,8 +554,14 @@
     }
     
     function updatePlayButton(showPlay) {
+        // Check if playBtn exists (it won't for iframe videos)
+        if (!playBtn) return;
+        
         const playIcon = playBtn.querySelector('.play-icon');
         const pauseIcon = playBtn.querySelector('.pause-icon');
+        
+        // Check if icons exist
+        if (!playIcon || !pauseIcon) return;
         
         if (showPlay) {
             playIcon.style.display = 'inline';

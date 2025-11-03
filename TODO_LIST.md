@@ -1,30 +1,5 @@
 # Wedding Website TODO List & Issues to Fix
 
-## 🚨 **Critical Issues (Must Fix)**
-
-### 1. **Google Maps Functionality**
-- **Status:** ✅ **COMPLETED** - Interactive maps fully implemented
-- **Issue:** Maps needed to be interactive and displayed within venue cards
-- **Impact:** Venue maps now show interactive Google Maps
-- **Fix Applied:** 
-  - Removed background images from map containers
-  - Implemented interactive Google Maps with custom markers
-  - Added "Get Directions" buttons below each map
-  - Maps work with placeholder API key (shows watermark but fully functional)
-- **Current State:** Interactive maps display in venue cards with working zoom, pan, and directions
-
-### 2. **Image Gallery Missing Images**
-- **Status:** ❌ Critical - Gallery broken
-- **Issue:** `image-showcase.html` references 100+ images (`P2P0xxxx.jpg`) that don't exist
-- **Impact:** Image gallery page completely broken
-- **Fix Required:** Update image paths to use actual available images or create placeholder system
-
-### 3. **Broken Image Paths**
-- **Status:** ❌ Critical - Venue maps broken
-- **Issue:** Venue sections reference `buncayo.jpg` and `coco.jpg` but they're now in `assets/images/couple/`
-- **Impact:** Venue map backgrounds not displaying
-- **Fix Required:** Update image paths in `index.html` venues section
-
 ## 🔧 **Missing Features (From notes.txt)**
 
 ### 4. **Add Proposal Video**

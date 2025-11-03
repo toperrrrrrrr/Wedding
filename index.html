@@ -12,18 +12,7 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons&display=swap" rel="stylesheet">
     <link href="css/styles.css" rel="stylesheet">
     <link href="css/additional-styles.css" rel="stylesheet">
-    <!-- Google Maps API Configuration -->
-    <script>
-        // Set your Google Maps API key here
-        window.googleMapsApiKey = 'YOUR_GOOGLE_MAPS_API_KEY'; // Replace with your actual API key
-
-        // If no API key is provided, fallback to placeholder
-        if (window.googleMapsApiKey === 'YOUR_GOOGLE_MAPS_API_KEY') {
-            console.log('Google Maps API key not set. Maps will show fallback placeholders.');
-            console.log('To enable Google Maps, replace YOUR_GOOGLE_MAPS_API_KEY with your actual API key.');
-        }
-    </script>
-    <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_MAPS_API_KEY&libraries=places&callback=venueMapsInit" async defer></script>
+    <!-- Google Maps - Using iframe embeds (no API key needed) -->
   </head>
   <body>
     <!-- Navigation -->
@@ -678,7 +667,7 @@
     </footer>
 
     <script src="js/countdown.js"></script>
-    <script src="js/video-player.js"></script>
+    <!-- video-player.js disabled - using Vimeo iframe embed -->
     <script src="js/hero-slideshow.js"></script>
     <script src="js/maps.js"></script>
     <script src="js/rsvp-form.js"></script>

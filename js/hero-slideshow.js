@@ -13,11 +13,11 @@
     let isAutoPlaying = true;
     
     const slideImages = [
-        'assets/images/engagement/hero-01.jpg',
-        'assets/images/engagement/hero-02.jpg',
-        'assets/images/engagement/hero-03.jpg',
-        'assets/images/engagement/hero-04.jpg',
-        'assets/images/engagement/hero-05.jpg'
+        'assets/images/gallery/hero-01.jpg',
+        'assets/images/gallery/hero-02.jpg',
+        'assets/images/gallery/hero-03.jpg',
+        'assets/images/gallery/hero-04.jpg',
+        'assets/images/gallery/hero-05.jpg'
     ];
     
     function initializeSlideshow() {

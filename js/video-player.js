@@ -27,7 +27,7 @@
             return video;
         }
 
-        console.log('🔍 Video element validation check...');
+        // Reduced logging frequency for this repetitive check
 
         // Try to find the video element
         const foundVideo = document.getElementById('wedding-video');
@@ -280,12 +280,13 @@
         const observer = new IntersectionObserver(function(entries) {
             entries.forEach(entry => {
                 const videoElement = getVideoElement();
-                console.log('Video section intersection:', {
-                    isIntersecting: entry.isIntersecting,
-                    intersectionRatio: entry.intersectionRatio,
-                    isScrolling: isScrolling,
-                    videoPaused: videoElement ? videoElement.paused : 'no video'
-                });
+                // Reduced logging for intersection events (too frequent)
+                // console.log('Video section intersection:', {
+                //     isIntersecting: entry.isIntersecting,
+                //     intersectionRatio: entry.intersectionRatio,
+                //     isScrolling: isScrolling,
+                //     videoPaused: videoElement ? videoElement.paused : 'no video'
+                // });
                 
                 if (entry.isIntersecting && entry.intersectionRatio >= 0.5) {
                     // Video section is sufficiently in view (50% or more)
@@ -365,7 +366,8 @@
             (viewportHeight - Math.max(0, rect.top)) / viewportHeight
         ));
         
-        console.log('Scroll ended - video section visibility:', visiblePercentage);
+        // Reduced logging for scroll end events
+        // console.log('Scroll ended - video section visibility:', visiblePercentage);
         
         // If video section is mostly visible (70%+), ensure it's playing
         const videoElement = getVideoElement();
@@ -715,7 +717,8 @@
                     try {
                         if (videoElement.tagName === 'IFRAME') {
                             // Vimeo iframe - volume can't be controlled directly, but we can log the intended volume
-                            console.log(`Time in section: ${timeInVideoSection.toFixed(1)}s, Intended Volume: ${(newVolume * 100).toFixed(1)}% (Vimeo iframe)`);
+                            // Reduced logging for volume changes (too frequent)
+                            // console.log(`Time in section: ${timeInVideoSection.toFixed(1)}s, Intended Volume: ${(newVolume * 100).toFixed(1)}% (Vimeo iframe)`);
                         } else {
                             // Regular HTML5 video element
                             videoElement.volume = newVolume;

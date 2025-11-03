@@ -23,7 +23,7 @@
             console.log('To enable Google Maps, replace YOUR_GOOGLE_MAPS_API_KEY with your actual API key.');
         }
     </script>
-    <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_MAPS_API_KEY&libraries=places&callback=venueMaps.init" async defer></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_MAPS_API_KEY&libraries=places&callback=venueMapsInit" async defer></script>
   </head>
   <body>
     <!-- Navigation -->
@@ -51,11 +51,11 @@
     <!-- Hero Section -->
     <section id="home" class="hero hero-glassmorphism">
         <div class="hero-background-slideshow">
-            <div class="hero-bg-image active" style="background-image: url('top 5/P2P05402.jpg')"></div>
-            <div class="hero-bg-image" style="background-image: url('top 5/P2P05521.jpg')"></div>
-            <div class="hero-bg-image" style="background-image: url('top 5/P2P05549.jpg')"></div>
-            <div class="hero-bg-image" style="background-image: url('top 5/P2P07170.jpg')"></div>
-            <div class="hero-bg-image" style="background-image: url('top 5/P2P07339.jpg')"></div>
+            <div class="hero-bg-image active" style="background-image: url('hero-slideshow/P2P05402.jpg')"></div>
+            <div class="hero-bg-image" style="background-image: url('hero-slideshow/P2P05521.jpg')"></div>
+            <div class="hero-bg-image" style="background-image: url('hero-slideshow/P2P05549.jpg')"></div>
+            <div class="hero-bg-image" style="background-image: url('hero-slideshow/P2P07170.jpg')"></div>
+            <div class="hero-bg-image" style="background-image: url('hero-slideshow/P2P07339.jpg')"></div>
         </div>
         <div class="hero-overlay"></div>
         
@@ -325,41 +325,21 @@
                 </div>
               </div>
                     
-                    <div class="venue-map-container" style="background-image: url('buncayo.jpg'); background-size: cover; background-position: center;">
-                        <div id="ceremony-map" class="venue-map" data-venue="ceremony"></div>
-                        <div class="map-info-panel" id="ceremony-info-panel">
-                            <div class="venue-info-header">
-                                <h3 class="venue-info-title">San Roque Parish Church</h3>
-                                <button class="venue-info-close" onclick="closeVenueInfo('ceremony')">&times;</button>
-                            </div>
-                            <div class="venue-info-content">
-                                <div class="venue-info-address">
-                                    <i class="material-icons venue-icon">location_on</i>
-                                    Buncayo Park Subdivision, San Roque<br>
-                                    San Pablo City, Laguna
-                                </div>
-                                <div class="venue-info-details">
-                                    <div class="venue-info-item">
-                                        <i class="material-icons venue-icon">local_parking</i>
-                                        <span>Parking available in subdivision</span>
-                                    </div>
-                                    <div class="venue-info-item">
-                                        <i class="material-icons venue-icon">church</i>
-                                        <span>Beautiful Catholic parish church</span>
-                                    </div>
-                                    <div class="venue-info-item">
-                                        <i class="material-icons venue-icon">music_note</i>
-                                        <span>Traditional wedding ceremony</span>
-                                    </div>
-                                </div>
-                                <div class="venue-info-actions">
-                                    <button class="btn btn-primary" onclick="getDirections('San Roque Parish Church, Buncayo Park Subdivision, San Roque, San Pablo City, Laguna')">
-                                        <i class="material-icons btn-icon">directions</i>
-                                        Get Directions
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
+                    <div class="venue-map-container">
+                        <iframe 
+                            class="venue-map-iframe"
+                            src="https://www.google.com/maps?q=14.0678,121.3254&hl=es;z=15&output=embed"
+                            frameborder="0"
+                            allowfullscreen
+                            loading="lazy"
+                            referrerpolicy="no-referrer-when-downgrade">
+                        </iframe>
+                    </div>
+                    <div class="venue-directions-btn-container">
+                        <button class="venue-directions-btn" onclick="getDirections('Buncayo Park Subdivision, San Roque, San Pablo City, Laguna')">
+                            <i class="material-icons">directions</i>
+                            Get Directions to Ceremony
+                        </button>
                     </div>
                 </div>
 
@@ -394,41 +374,21 @@
                 </div>
               </div>
 
-                    <div class="venue-map-container" style="background-image: url('coco.jpg'); background-size: cover; background-position: center;">
-                        <div id="reception-map" class="venue-map" data-venue="reception"></div>
-                        <div class="map-info-panel" id="reception-info-panel">
-                            <div class="venue-info-header">
-                                <h3 class="venue-info-title">The Coco Palace</h3>
-                                <button class="venue-info-close" onclick="closeVenueInfo('reception')">&times;</button>
-                            </div>
-                            <div class="venue-info-content">
-                                <div class="venue-info-address">
-                                    <i class="material-icons venue-icon">location_on</i>
-                                    Km 83 Maharlika Highway<br>
-                                    Brgy. San Francisco Calihan, San Pablo City, Laguna
-                                </div>
-                                <div class="venue-info-details">
-                                    <div class="venue-info-item">
-                                        <i class="material-icons venue-icon">local_parking</i>
-                                        <span>Ample parking available</span>
-                                    </div>
-                                    <div class="venue-info-item">
-                                        <i class="material-icons venue-icon">restaurant</i>
-                                        <span>Reception dinner & celebration</span>
-                                    </div>
-                                    <div class="venue-info-item">
-                                        <i class="material-icons venue-icon">celebration</i>
-                                        <span>Dancing and festivities</span>
-                                    </div>
-                                </div>
-                                <div class="venue-info-actions">
-                                    <button class="btn btn-primary" onclick="getDirections('Km 83 Maharlika Highway, Brgy. San Francisco Calihan, San Pablo City, Laguna')">
-                                        <i class="material-icons btn-icon">directions</i>
-                                        Get Directions
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
+                    <div class="venue-map-container">
+                        <iframe 
+                            class="venue-map-iframe"
+                            src="https://www.google.com/maps?q=14.0720,121.3300&hl=es;z=15&output=embed"
+                            frameborder="0"
+                            allowfullscreen
+                            loading="lazy"
+                            referrerpolicy="no-referrer-when-downgrade">
+                        </iframe>
+                    </div>
+                    <div class="venue-directions-btn-container">
+                        <button class="venue-directions-btn" onclick="getDirections('Km 83 Maharlika Highway, Brgy. San Francisco Calihan, San Pablo City, Laguna')">
+                            <i class="material-icons">directions</i>
+                            Get Directions to Reception
+                        </button>
                     </div>
           </div>
         </div>
@@ -723,5 +683,7 @@
     <script src="js/maps.js"></script>
     <script src="js/rsvp-form.js"></script>
     <script src="js/script.js"></script>
+    <script src="debug-console.js"></script>
+    <script src="monitor-website.js"></script>
   </body>
 </html>

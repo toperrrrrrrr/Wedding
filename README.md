@@ -51,8 +51,10 @@ wedding-website/
 ├── assets/                    # Images and icons
 │   ├── icons/                # SVG icons (burger, close, text, etc.)
 │   └── images/               # Wedding photos and graphics
-│       ├── engagement/       # Engagement photos
-│       └── gallery/          # Photo gallery (to be added)
+│       ├── couple/           # Couple-specific photos
+│       ├── gallery/          # Photo gallery images
+│       ├── misc/             # Miscellaneous images
+│       └── [other folders]   # Additional image categories
 ├── css/                      # Stylesheets
 │   ├── styles.css           # Main styles
 │   └── additional-styles.css # Additional styling
@@ -63,7 +65,7 @@ wedding-website/
 │   ├── maps.js             # Google Maps integration
 │   ├── rsvp-form.js        # RSVP form handling
 │   └── video-player.js     # Video section controls
-├── top 5/                    # Featured wedding photos (hero slideshow)
+├── hero-slideshow/           # Featured wedding photos (hero slideshow)
 └── README.md                # This file
 ```
 
@@ -91,8 +93,8 @@ Update the following in `index.html`:
 - **Venue Details:** Lines 212-224 (Ceremony & Reception info)
 
 ### Photos
-- **Hero Slideshow:** Replace images in `top 5/` directory
-- **Engagement Photos:** Add to `assets/images/engagement/`
+- **Hero Slideshow:** Replace images in `hero-slideshow/` directory
+- **Gallery Photos:** Add to `assets/images/gallery/`
 - **Gallery:** Add photo gallery section (structure exists)
 
 ### Content Sections

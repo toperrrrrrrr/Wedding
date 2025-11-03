@@ -1,11 +1,16 @@
+# TODO - Completed Tasks
+# ✅ Backup created and codebase reorganized (Nov 3, 2025)
+# ✅ Folder structure improved
+# ✅ Image paths updated
 
+# TODO - Remaining Tasks
+# ✅ COMPLETED: Google Maps functionality (clean rebuild from scratch)
+# 🔴 CRITICAL: Fix image gallery (missing images in image-showcase.html)
+# 🔴 CRITICAL: Update broken image paths for venue backgrounds
+# 🟡 HIGH: Add/update proposal video
+# 🟡 HIGH: Implement working photo gallery
+# 🟡 HIGH: Update dress code to specify earth tones
+# 🟡 MEDIUM: Add Google Maps API key (optional - maps work without it)
+# 🟡 MEDIUM: Test and optimize performance
 
-
-
-Add proposal video
-add gallery
-
-
-
-Add dress code the color palette of earth tones
-the map location suddenly disappeared
+# See TODO_LIST.md for detailed breakdown

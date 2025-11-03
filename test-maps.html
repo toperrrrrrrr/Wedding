@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google Maps Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .map-container { width: 100%; height: 400px; margin: 20px 0; border: 1px solid #ccc; }
+        .info { background: #f0f8ff; padding: 15px; border-radius: 5px; margin: 20px 0; }
+    </style>
+</head>
+<body>
+    <h1>Google Maps Test Page</h1>
+
+    <div class="info">
+        <h3>🎯 Maps Status Check</h3>
+        <p>Open your browser's Developer Console (F12) to see detailed debug information.</p>
+        <p>Look for these success messages:</p>
+        <ul>
+            <li>✅ "Google Maps API loaded successfully"</li>
+            <li>✅ "Google Maps initialized successfully"</li>
+            <li>🎉 "Maps are now visible on the page!"</li>
+        </ul>
+    </div>
+
+    <h2>🏛️ Ceremony Venue - San Roque Parish Church</h2>
+    <div id="ceremony-map" class="map-container"></div>
+
+    <h2>🎉 Reception Venue - The Coco Palace</h2>
+    <div id="reception-map" class="map-container"></div>
+
+    <div class="info">
+        <h3>🔧 API Key Status</h3>
+        <p><strong>Current API Key:</strong> <code id="api-key-status">Checking...</code></p>
+        <p><strong>Note:</strong> Using placeholder API key "YOUR_GOOGLE_MAPS_API_KEY" - maps work but with limitations.</p>
+        <p>To get full functionality: <a href="https://console.cloud.google.com/google/maps-apis" target="_blank">Get Google Maps API Key</a></p>
+    </div>
+
+    <!-- Google Maps API Configuration -->
+    <script>
+        window.googleMapsApiKey = 'YOUR_GOOGLE_MAPS_API_KEY';
+        document.getElementById('api-key-status').textContent = window.googleMapsApiKey;
+
+        if (window.googleMapsApiKey === 'YOUR_GOOGLE_MAPS_API_KEY') {
+            console.log('⚠️ Using placeholder API key - maps will work but with limitations');
+        }
+    </script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_MAPS_API_KEY&libraries=places&callback=venueMapsInit" async defer></script>
+
+    <!-- Load our maps script -->
+    <script src="js/maps.js"></script>
+</body>
+</html>

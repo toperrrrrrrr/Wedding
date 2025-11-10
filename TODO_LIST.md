@@ -2,6 +2,13 @@
 
 ## 🔧 **Missing Features (From notes.txt)**
 
+### 3. **Add Invitation PDF Link**
+- **Status:** ✅ **COMPLETED**
+- **Issue:** Need clickable link to view invitation PDF
+- **Current:** Added "View Invitation" button with PDF icon in hero section and navigation
+- **Location:** Hero buttons and nav menu
+- **Result:** Users can now view and download `Nori & Glo Invitation.pdf`
+
 ### 4. **Add Proposal Video**
 - **Status:** ⏳ Pending
 - **Issue:** Video section exists but may need different video
@@ -15,10 +22,20 @@
 - **Fix Required:** Add actual wedding photos or create functional gallery
 
 ### 6. **Update Dress Code**
-- **Status:** ⏳ Pending
-- **Issue:** Current dress code is generic "formal attire"
-- **Required:** Earth tones color palette specification
-- **Fix Required:** Update FAQ and details sections with earth tone dress code
+- **Status:** ✅ **COMPLETED - Dedicated Section Created**
+- **Issue:** Current dress code was generic "formal attire"
+- **Required:** Earth tones color palette specification with DressCode.svg
+- **Fix Applied:** Created a dedicated, beautiful Dress Code section with:
+  - **DressCode.svg prominently displayed** (custom artwork as centerpiece)
+  - New standalone section between Schedule and Venues
+  - Specific attire for God Parents (Ninong/Ninang) in styled cards
+  - Specific attire for Guests (Gentlemen/Ladies) in styled cards
+  - Interactive earth tone color palette (6 colors with hover effects)
+  - Navigation link added to main menu
+  - Footer links updated
+  - Custom CSS file created (`css/dress-code.css`)
+  - Fully responsive mobile design
+  - Beautiful gradient background and card animations
 
 ## ⚠️ **Medium Priority Issues**
 

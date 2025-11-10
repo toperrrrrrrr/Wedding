@@ -12,6 +12,7 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons&display=swap" rel="stylesheet">
     <link href="css/styles.css" rel="stylesheet">
     <link href="css/additional-styles.css" rel="stylesheet">
+    <link href="css/dress-code.css" rel="stylesheet">
     <!-- Google Maps - Using iframe embeds (no API key needed) -->
   </head>
   <body>
@@ -25,9 +26,13 @@
                 <a href="#home" class="nav-link">Home</a>
                 <a href="#story" class="nav-link">Our Story</a>
                 <a href="#details" class="nav-link">Details</a>
+                <a href="#dress-code" class="nav-link">Dress Code</a>
                 <a href="#gallery" class="nav-link">Gallery</a>
                 <a href="#venues" class="nav-link">Venues</a>
                 <a href="#faq" class="nav-link">FAQ</a>
+                <a href="Nori & Glo Invitation.pdf" target="_blank" class="nav-link" rel="noopener noreferrer">
+                    <i class="material-icons" style="font-size: 16px; vertical-align: middle; margin-right: 4px;">description</i>Invitation
+                </a>
                 <a href="#rsvp" class="nav-link nav-cta">RSVP</a>
         </div>
             <div class="nav-toggle" id="nav-toggle">
@@ -73,6 +78,10 @@
                 <div class="hero-actions">
                     <a href="#rsvp" class="btn btn-primary-elegant">
                         <span class="btn-text">RSVP Now</span>
+                    </a>
+                    <a href="Nori & Glo Invitation.pdf" target="_blank" class="btn btn-secondary-elegant" rel="noopener noreferrer">
+                        <i class="material-icons" style="font-size: 18px; margin-right: 6px;">description</i>
+                        <span class="btn-text">View Invitation</span>
                     </a>
                     <a href="#story" class="btn btn-secondary-elegant">
                         <span class="btn-text">Our Story</span>
@@ -216,8 +225,8 @@
                     <div class="detail-icon"><i class="material-icons">checkroom</i></div>
                     <h3>Dress Code</h3>
                     <div class="detail-info">
-                        <p class="detail-venue">Formal Attire</p>
-                        <p class="detail-description">We'd love to see you dressed up for our special day! Think elegant dresses and sharp suits.</p>
+                        <p class="detail-venue">Formal Attire in Earth Tones</p>
+                        <p class="detail-description">See our detailed dress code section below for color palette and attire guidelines.</p>
             </div>
           </div>
         </div>
@@ -273,9 +282,84 @@
       </div>
     </section>
 
+    <!-- Dress Code Section -->
+    <section id="dress-code" class="dress-code-section">
+        <div class="container">
+            <h2 class="section-title">Dress Code</h2>
+            <p class="section-subtitle">Formal Attire in Earth Tone Neutral Colors</p>
+
+            <!-- Dress Code Visual -->
+            <div class="dress-code-visual">
+                <img src="DressCode.svg" alt="Dress Code Guidelines" class="dress-code-image">
+            </div>
+
+            <!-- Dress Code Details -->
+            <div class="dress-code-details">
+                <div class="dress-code-column">
+                    <div class="dress-code-card">
+                        <h3><i class="material-icons">star</i> Attire for God Parents</h3>
+                        <div class="attire-list">
+                            <div class="attire-item">
+                                <strong>Ninong (Male Sponsors):</strong>
+                                <p>Suit and slacks</p>
+                            </div>
+                            <div class="attire-item">
+                                <strong>Ninang (Female Sponsors):</strong>
+                                <p>Formal wear</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dress-code-column">
+                    <div class="dress-code-card">
+                        <h3><i class="material-icons">people</i> Attire for Guests</h3>
+                        <div class="attire-list">
+                            <div class="attire-item">
+                                <strong>Gentlemen:</strong>
+                                <p>Polo, long sleeve and slacks</p>
+                            </div>
+                            <div class="attire-item">
+                                <strong>Ladies:</strong>
+                                <p>Long dress or casual dress</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Color Palette -->
+            <div class="color-palette-section">
+                <h3>Earth Tone Neutral Colors</h3>
+                <p>Please wear colors from our earth tone palette</p>
+                <div class="color-swatches">
+                    <div class="color-swatch" style="background-color: #8B4513;">
+                        <span class="color-name">Brown</span>
+                    </div>
+                    <div class="color-swatch" style="background-color: #CD853F;">
+                        <span class="color-name">Peru</span>
+                    </div>
+                    <div class="color-swatch" style="background-color: #D2B48C;">
+                        <span class="color-name">Tan</span>
+                    </div>
+                    <div class="color-swatch" style="background-color: #BC987E;">
+                        <span class="color-name">Beige</span>
+                    </div>
+                    <div class="color-swatch" style="background-color: #8B7355;">
+                        <span class="color-name">Taupe</span>
+                    </div>
+                    <div class="color-swatch" style="background-color: #5C4033;">
+                        <span class="color-name">Espresso</span>
+                    </div>
+                </div>
+                <p class="color-description">Think browns, tans, beiges, taupes, and other warm neutral tones perfect for our celebration!</p>
+            </div>
+        </div>
+    </section>
+
   
-            
-     
+
+
     <!-- Venues Section -->
     <section id="venues" class="venues-section">
         <div class="container">
@@ -428,7 +512,27 @@
                         <span class="material-icons faq-toggle" aria-expanded="false">expand_more</span>
                     </div>
                     <div class="faq-answer">
-                        <p>We're requesting formal attire for our special day. Think elegant dresses for the ladies and sharp suits or dress shirts with ties for the gentlemen. We'd love to see you dressed up to celebrate with us!</p>
+                        <p><strong>We're requesting formal attire in earth tone neutral colors.</strong></p>
+                        <p style="margin-top: 10px;"><strong>Attire for God Parents:</strong></p>
+                        <ul style="margin-left: 20px; margin-top: 5px;">
+                            <li><strong>Ninong:</strong> Suit and slacks</li>
+                            <li><strong>Ninang:</strong> Formal wear</li>
+                        </ul>
+                        <p style="margin-top: 10px;"><strong>Attire for Guests:</strong></p>
+                        <ul style="margin-left: 20px; margin-top: 5px;">
+                            <li><strong>Gentlemen:</strong> Polo, long sleeve and slacks</li>
+                            <li><strong>Ladies:</strong> Long dress or casual dress</li>
+                        </ul>
+                        <p style="margin-top: 15px;"><strong>Earth Tone Neutral Colors:</strong></p>
+                        <div style="display: flex; gap: 12px; margin-top: 10px; flex-wrap: wrap; align-items: center;">
+                            <span style="display: inline-block; width: 35px; height: 35px; border-radius: 50%; background-color: #8B4513; border: 2px solid #fff; box-shadow: 0 2px 4px rgba(0,0,0,0.2);" title="Brown"></span>
+                            <span style="display: inline-block; width: 35px; height: 35px; border-radius: 50%; background-color: #CD853F; border: 2px solid #fff; box-shadow: 0 2px 4px rgba(0,0,0,0.2);" title="Peru"></span>
+                            <span style="display: inline-block; width: 35px; height: 35px; border-radius: 50%; background-color: #D2B48C; border: 2px solid #fff; box-shadow: 0 2px 4px rgba(0,0,0,0.2);" title="Tan"></span>
+                            <span style="display: inline-block; width: 35px; height: 35px; border-radius: 50%; background-color: #BC987E; border: 2px solid #fff; box-shadow: 0 2px 4px rgba(0,0,0,0.2);" title="Beige"></span>
+                            <span style="display: inline-block; width: 35px; height: 35px; border-radius: 50%; background-color: #8B7355; border: 2px solid #fff; box-shadow: 0 2px 4px rgba(0,0,0,0.2);" title="Taupe"></span>
+                            <span style="display: inline-block; width: 35px; height: 35px; border-radius: 50%; background-color: #5C4033; border: 2px solid #fff; box-shadow: 0 2px 4px rgba(0,0,0,0.2);" title="Dark Brown"></span>
+                        </div>
+                        <p style="margin-top: 15px;">Think browns, tans, beiges, taupes, and other warm neutral tones. We'd love to see you dressed up to celebrate with us!</p>
                     </div>
                 </div>
 
@@ -657,6 +761,8 @@
                     <a href="#home">Home</a>
                     <a href="#story">Our Story</a>
                     <a href="#details">Details</a>
+                    <a href="#dress-code">Dress Code</a>
+                    <a href="#venues">Venues</a>
                     <a href="#rsvp">RSVP</a>
           </div>
         </div>

@@ -257,8 +257,8 @@
 
     <!-- Showcase Header -->
     <header class="showcase-header">
-        <h1 class="showcase-title">Our Complete Photo Collection</h1>
-        <p class="showcase-subtitle">A beautiful journey captured through 135 precious moments from our engagement and wedding preparations</p>
+        <h1 class="showcase-title">Our Photo Collection</h1>
+        <p class="showcase-subtitle">A beautiful showcase of our love story captured through precious moments from our engagement and wedding journey</p>
     </header>
 
     <!-- Statistics Section -->
@@ -266,20 +266,20 @@
         <div class="container">
             <div class="stats-grid">
                 <div class="stat-item">
-                    <span class="stat-number">135</span>
+                    <span class="stat-number">13</span>
                     <span class="stat-label">Total Photos</span>
                 </div>
                 <div class="stat-item">
-                    <span class="stat-number">50+</span>
-                    <span class="stat-label">Engagement Moments</span>
+                    <span class="stat-number">5</span>
+                    <span class="stat-label">Hero Moments</span>
                 </div>
                 <div class="stat-item">
-                    <span class="stat-number">40+</span>
-                    <span class="stat-label">Couple Portraits</span>
+                    <span class="stat-number">5</span>
+                    <span class="stat-label">Gallery Portraits</span>
                 </div>
                 <div class="stat-item">
-                    <span class="stat-number">45+</span>
-                    <span class="stat-label">Family & Friends</span>
+                    <span class="stat-number">3</span>
+                    <span class="stat-label">Couple Memories</span>
                 </div>
             </div>
         </div>
@@ -338,135 +338,26 @@
     </div>
 
     <script>
-        // Image data for the showcase
+        // Image data for the showcase - using available images
         const allImages = [
-            // Engagement Photos
-            { src: 'images/P2P05281.jpg', category: 'engagement', title: 'Our Engagement', description: 'The beginning of forever' },
-            { src: 'images/P2P05309.jpg', category: 'couple', title: 'Beautiful Moment', description: 'A quiet moment together' },
-            { src: 'images/P2P05328.jpg', category: 'engagement', title: 'The Yes Moment', description: 'When we said yes to forever' },
-            { src: 'images/P2P05341.jpg', category: 'couple', title: 'Dancing Under Stars', description: 'Our first dance together' },
-            { src: 'images/P2P05390.jpg', category: 'family', title: 'Family Love', description: 'With our families who brought us together' },
-            { src: 'images/P2P05401.jpg', category: 'couple', title: 'Laughing Together', description: 'Our favorite thing to do' },
-            { src: 'images/P2P05402.jpg', category: 'engagement', title: 'The Ring', description: 'The symbol that started it all' },
-            { src: 'images/P2P05417.jpg', category: 'couple', title: 'Our Future', description: 'Walking into our future together' },
-            { src: 'images/P2P05422.jpg', category: 'family', title: 'Family Gathering', description: 'Our beautiful family celebration' },
-            { src: 'images/P2P05432.jpg', category: 'couple', title: 'Perfect Moment', description: 'A moment captured in time' },
-            { src: 'images/P2P05435.jpg', category: 'engagement', title: 'Love Story Begins', description: 'Where our love story began' },
-            { src: 'images/P2P05447.jpg', category: 'couple', title: 'Together Forever', description: 'Together for always' },
-            { src: 'images/P2P05456.jpg', category: 'couple', title: 'Romantic Moment', description: 'A romantic evening together' },
-            { src: 'images/P2P05460.jpg', category: 'engagement', title: 'Engagement Bliss', description: 'Pure happiness and joy' },
-            { src: 'images/P2P05474.jpg', category: 'couple', title: 'Sweet Embrace', description: 'Holding each other close' },
-            { src: 'images/P2P05477.jpg', category: 'family', title: 'Family Portrait', description: 'Our loving family' },
-            { src: 'images/P2P05486.jpg', category: 'couple', title: 'Love Gaze', description: 'Looking at each other with love' },
-            { src: 'images/P2P05500.jpg', category: 'engagement', title: 'Engagement Session', description: 'Our beautiful engagement photos' },
-            { src: 'images/P2P05505.jpg', category: 'couple', title: 'Intimate Moment', description: 'A quiet, intimate moment' },
-            { src: 'images/P2P05513.jpg', category: 'family', title: 'Family Love', description: 'Surrounded by family love' },
-            { src: 'images/P2P05521.jpg', category: 'couple', title: 'Playful Moment', description: 'Playful and happy together' },
-            { src: 'images/P2P05534.jpg', category: 'engagement', title: 'Ring Close-up', description: 'The beautiful engagement ring' },
-            { src: 'images/P2P05542.jpg', category: 'couple', title: 'Sunset Romance', description: 'Romance in golden hour' },
-            { src: 'images/P2P05544.jpg', category: 'family', title: 'Family Time', description: 'Precious family moments' },
-            { src: 'images/P2P05549.jpg', category: 'couple', title: 'Hand in Hand', description: 'Walking hand in hand' },
-            { src: 'images/P2P05551.jpg', category: 'engagement', title: 'Engagement Joy', description: 'The joy of being engaged' },
-            { src: 'images/P2P05557.jpg', category: 'couple', title: 'Tender Moment', description: 'A tender embrace' },
-            { src: 'images/P2P05563.jpg', category: 'family', title: 'Extended Family', description: 'Our extended family' },
-            { src: 'images/P2P05573.jpg', category: 'couple', title: 'Laughing Together', description: 'Shared laughter and joy' },
-            { src: 'images/P2P05577.jpg', category: 'engagement', title: 'Engagement Portraits', description: 'Beautiful portrait session' },
-            { src: 'images/P2P05582.jpg', category: 'couple', title: 'Romantic Stroll', description: 'A romantic walk together' },
-            { src: 'images/P2P05598.jpg', category: 'family', title: 'Family Celebration', description: 'Celebrating our love with family' },
-            { src: 'images/P2P05607.jpg', category: 'couple', title: 'Sweet Kiss', description: 'A sweet moment of affection' },
-            { src: 'images/P2P05619.jpg', category: 'engagement', title: 'Engagement Magic', description: 'The magic of our engagement' },
-            { src: 'images/P2P05624.jpg', category: 'couple', title: 'Perfect Day', description: 'A perfect day together' },
-            { src: 'images/P2P05644.jpg', category: 'family', title: 'Family Bonds', description: 'Strong family bonds' },
-            { src: 'images/P2P05649.jpg', category: 'couple', title: 'Golden Hour', description: 'Golden hour romance' },
-            { src: 'images/P2P05667.jpg', category: 'engagement', title: 'Engagement Session', description: 'Our engagement photo session' },
-            { src: 'images/P2P05678.jpg', category: 'couple', title: 'Love Connection', description: 'Our deep connection' },
-            { src: 'images/P2P05685.jpg', category: 'family', title: 'Family Gathering', description: 'Gathering with loved ones' },
-            { src: 'images/P2P05704.jpg', category: 'couple', title: 'Romantic Moment', description: 'A romantic interlude' },
-            { src: 'images/P2P05711.jpg', category: 'engagement', title: 'Engagement Beauty', description: 'The beauty of our engagement' },
-            { src: 'images/P2P05721.jpg', category: 'couple', title: 'Playful Love', description: 'Playful expressions of love' },
-            { src: 'images/P2P05723.jpg', category: 'family', title: 'Family Love', description: 'Love from our family' },
-            { src: 'images/P2P05724.jpg', category: 'couple', title: 'Tender Touch', description: 'A tender touch' },
-            { src: 'images/P2P05733.jpg', category: 'engagement', title: 'Engagement Bliss', description: 'Blissful engagement moments' },
-            { src: 'images/P2P05734.jpg', category: 'couple', title: 'Sweet Moments', description: 'Sweet moments together' },
-            { src: 'images/P2P05737.jpg', category: 'family', title: 'Family Portrait', description: 'A beautiful family portrait' },
-            { src: 'images/P2P05739.jpg', category: 'couple', title: 'Romantic Evening', description: 'A romantic evening together' },
-            { src: 'images/P2P05745.jpg', category: 'engagement', title: 'Engagement Session', description: 'Professional engagement photos' },
-            { src: 'images/P2P05746.jpg', category: 'couple', title: 'Love Story', description: 'Our unique love story' },
-            { src: 'images/P2P05754.jpg', category: 'family', title: 'Family Time', description: 'Quality family time' },
-            { src: 'images/P2P05756.jpg', category: 'couple', title: 'Intimate Moment', description: 'An intimate moment' },
-            { src: 'images/P2P05757.jpg', category: 'engagement', title: 'Engagement Magic', description: 'The magic of engagement' },
-            { src: 'images/P2P05759.jpg', category: 'couple', title: 'Happy Together', description: 'Happiness together' },
-            { src: 'images/P2P05761.jpg', category: 'family', title: 'Family Celebration', description: 'Celebrating with family' },
-            { src: 'images/P2P05763.jpg', category: 'couple', title: 'Romantic Kiss', description: 'A romantic kiss' },
-            { src: 'images/P2P05765.jpg', category: 'engagement', title: 'Engagement Portraits', description: 'Stunning engagement portraits' },
-            { src: 'images/P2P05769.jpg', category: 'couple', title: 'Love and Laughter', description: 'Love and laughter' },
-            { src: 'images/P2P05776.jpg', category: 'family', title: 'Family Love', description: 'The love of family' },
-            { src: 'images/P2P05777.jpg', category: 'couple', title: 'Perfect Day', description: 'A perfect day with you' },
-            { src: 'images/P2P05778.jpg', category: 'engagement', title: 'Engagement Joy', description: 'The joy of engagement' },
-            { src: 'images/P2P05783.jpg', category: 'couple', title: 'Tender Moments', description: 'Tender moments together' },
-            { src: 'images/P2P05787.jpg', category: 'family', title: 'Family Bonds', description: 'Strong family bonds' },
-            { src: 'images/P2P05788.jpg', category: 'couple', title: 'Romantic Stroll', description: 'A romantic stroll' },
-            { src: 'images/P2P05790.jpg', category: 'engagement', title: 'Engagement Session', description: 'Our engagement photo session' },
-            { src: 'images/P2P05797.jpg', category: 'couple', title: 'Love Connection', description: 'Our deep love connection' },
-            { src: 'images/P2P05802.jpg', category: 'family', title: 'Family Gathering', description: 'Gathering with family' },
-            { src: 'images/P2P05804.jpg', category: 'couple', title: 'Romantic Moment', description: 'A romantic moment' },
-            { src: 'images/P2P05805.jpg', category: 'engagement', title: 'Engagement Beauty', description: 'The beauty of our engagement' },
-            { src: 'images/P2P05806.jpg', category: 'couple', title: 'Playful Love', description: 'Playful expressions of love' },
-            { src: 'images/P2P05809.jpg', category: 'family', title: 'Family Love', description: 'Love from our family' },
-            { src: 'images/P2P05811.jpg', category: 'couple', title: 'Tender Touch', description: 'A tender touch' },
-            { src: 'images/P2P05820.jpg', category: 'engagement', title: 'Engagement Bliss', description: 'Blissful engagement moments' },
-            { src: 'images/P2P05844.jpg', category: 'couple', title: 'Sweet Moments', description: 'Sweet moments together' },
-            { src: 'images/P2P07028.jpg', category: 'portrait', title: 'Beautiful Portrait', description: 'A stunning portrait' },
-            { src: 'images/P2P07036.jpg', category: 'portrait', title: 'Elegant Portrait', description: 'An elegant portrait session' },
-            { src: 'images/P2P07038.jpg', category: 'couple', title: 'Romantic Evening', description: 'A romantic evening together' },
-            { src: 'images/P2P07040.jpg', category: 'portrait', title: 'Professional Portrait', description: 'Professional portrait photography' },
-            { src: 'images/P2P07046.jpg', category: 'couple', title: 'Love Story', description: 'Our unique love story' },
-            { src: 'images/P2P07053.jpg', category: 'portrait', title: 'Stunning Portrait', description: 'A stunning portrait capture' },
-            { src: 'images/P2P07055.jpg', category: 'family', title: 'Family Time', description: 'Quality family time' },
-            { src: 'images/P2P07061.jpg', category: 'couple', title: 'Intimate Moment', description: 'An intimate moment' },
-            { src: 'images/P2P07067.jpg', category: 'portrait', title: 'Portrait Session', description: 'Professional portrait session' },
-            { src: 'images/P2P07070.jpg', category: 'couple', title: 'Happy Together', description: 'Happiness together' },
-            { src: 'images/P2P07074.jpg', category: 'family', title: 'Family Celebration', description: 'Celebrating with family' },
-            { src: 'images/P2P07080.jpg', category: 'portrait', title: 'Beautiful Portrait', description: 'A beautiful portrait' },
-            { src: 'images/P2P07082.jpg', category: 'couple', title: 'Romantic Kiss', description: 'A romantic kiss' },
-            { src: 'images/P2P07089.jpg', category: 'family', title: 'Family Bonds', description: 'Strong family bonds' },
-            { src: 'images/P2P07091.jpg', category: 'portrait', title: 'Elegant Portrait', description: 'An elegant portrait' },
-            { src: 'images/P2P07095.jpg', category: 'couple', title: 'Love and Laughter', description: 'Love and laughter' },
-            { src: 'images/P2P07096.jpg', category: 'family', title: 'Family Love', description: 'The love of family' },
-            { src: 'images/P2P07100.jpg', category: 'portrait', title: 'Perfect Portrait', description: 'A perfect portrait capture' },
-            { src: 'images/P2P07102.jpg', category: 'couple', title: 'Perfect Day', description: 'A perfect day with you' },
-            { src: 'images/P2P07109.jpg', category: 'family', title: 'Family Gathering', description: 'Gathering with family' },
-            { src: 'images/P2P07112.jpg', category: 'portrait', title: 'Portrait Magic', description: 'The magic of portrait photography' },
-            { src: 'images/P2P07115.jpg', category: 'couple', title: 'Tender Moments', description: 'Tender moments together' },
-            { src: 'images/P2P07126.jpg', category: 'family', title: 'Family Portrait', description: 'A beautiful family portrait' },
-            { src: 'images/P2P07140.jpg', category: 'portrait', title: 'Stunning Portrait', description: 'A stunning portrait' },
-            { src: 'images/P2P07142.jpg', category: 'couple', title: 'Romantic Stroll', description: 'A romantic stroll' },
-            { src: 'images/P2P07151.jpg', category: 'family', title: 'Family Time', description: 'Quality family time' },
-            { src: 'images/P2P07159.jpg', category: 'portrait', title: 'Beautiful Portrait', description: 'A beautiful portrait' },
-            { src: 'images/P2P07164.jpg', category: 'couple', title: 'Romantic Moment', description: 'A romantic moment' },
-            { src: 'images/P2P07170.jpg', category: 'family', title: 'Family Bonds', description: 'Strong family bonds' },
-            { src: 'images/P2P07176.jpg', category: 'portrait', title: 'Elegant Portrait', description: 'An elegant portrait' },
-            { src: 'images/P2P07178.jpg', category: 'couple', title: 'Playful Love', description: 'Playful expressions of love' },
-            { src: 'images/P2P07182.jpg', category: 'family', title: 'Family Love', description: 'Love from our family' },
-            { src: 'images/P2P07185.jpg', category: 'portrait', title: 'Portrait Session', description: 'Professional portrait session' },
-            { src: 'images/P2P07191.jpg', category: 'couple', title: 'Tender Touch', description: 'A tender touch' },
-            { src: 'images/P2P07197.jpg', category: 'family', title: 'Family Celebration', description: 'Celebrating with family' },
-            { src: 'images/P2P07203.jpg', category: 'portrait', title: 'Stunning Portrait', description: 'A stunning portrait' },
-            { src: 'images/P2P07204.jpg', category: 'couple', title: 'Sweet Moments', description: 'Sweet moments together' },
-            { src: 'images/P2P07210.jpg', category: 'family', title: 'Family Gathering', description: 'Gathering with family' },
-            { src: 'images/P2P07212.jpg', category: 'portrait', title: 'Beautiful Portrait', description: 'A beautiful portrait' },
-            { src: 'images/P2P07224.jpg', category: 'couple', title: 'Romantic Evening', description: 'A romantic evening together' },
-            { src: 'images/P2P07228.jpg', category: 'family', title: 'Family Portrait', description: 'A beautiful family portrait' },
-            { src: 'images/P2P07258.jpg', category: 'portrait', title: 'Professional Portrait', description: 'Professional portrait photography' },
-            { src: 'images/P2P07266.jpg', category: 'couple', title: 'Love Story', description: 'Our unique love story' },
-            { src: 'images/P2P07272.jpg', category: 'family', title: 'Family Time', description: 'Quality family time' },
-            { src: 'images/P2P07280.jpg', category: 'portrait', title: 'Stunning Portrait', description: 'A stunning portrait capture' },
-            { src: 'images/P2P07305.jpg', category: 'couple', title: 'Intimate Moment', description: 'An intimate moment' },
-            { src: 'images/P2P07318.jpg', category: 'family', title: 'Family Celebration', description: 'Celebrating with family' },
-            { src: 'images/P2P07331.jpg', category: 'portrait', title: 'Beautiful Portrait', description: 'A beautiful portrait' },
-            { src: 'images/P2P07339.jpg', category: 'couple', title: 'Happy Together', description: 'Happiness together' },
-            { src: 'images/P2P07353.jpg', category: 'family', title: 'Family Bonds', description: 'Strong family bonds' },
-            { src: 'images/P2P07363.jpg', category: 'portrait', title: 'Perfect Portrait', description: 'A perfect portrait capture' }
+            // Hero slideshow images (existing)
+            { src: 'hero-slideshow/P2P05402.jpg', category: 'couple', title: 'Our Love Story', description: 'Beautiful moments captured in time' },
+            { src: 'hero-slideshow/P2P05521.jpg', category: 'engagement', title: 'Engagement Bliss', description: 'The joy of our engagement' },
+            { src: 'hero-slideshow/P2P05549.jpg', category: 'couple', title: 'Romantic Moments', description: 'Sweet moments together' },
+            { src: 'hero-slideshow/P2P07170.jpg', category: 'family', title: 'Family Love', description: 'Surrounded by family love' },
+            { src: 'hero-slideshow/P2P07339.jpg', category: 'couple', title: 'Forever Together', description: 'Our journey continues' },
+
+            // Gallery images (existing)
+            { src: 'assets/images/gallery/hero-01.jpg', category: 'portrait', title: 'Beautiful Portrait', description: 'A stunning portrait capture' },
+            { src: 'assets/images/gallery/hero-02.jpg', category: 'couple', title: 'Perfect Day', description: 'A perfect day with you' },
+            { src: 'assets/images/gallery/hero-03.jpg', category: 'engagement', title: 'Engagement Magic', description: 'The magic of our engagement' },
+            { src: 'assets/images/gallery/hero-04.jpg', category: 'family', title: 'Family Celebration', description: 'Celebrating with family' },
+            { src: 'assets/images/gallery/hero-05.jpg', category: 'portrait', title: 'Elegant Portrait', description: 'An elegant portrait session' },
+
+            // Couple images (existing)
+            { src: 'assets/images/couple/buncayo.jpg', category: 'couple', title: 'Sweet Embrace', description: 'Holding each other close' },
+            { src: 'assets/images/couple/coco.jpg', category: 'couple', title: 'Romantic Evening', description: 'A romantic evening together' },
+            { src: 'assets/images/couple/noriglo.png', category: 'couple', title: 'Love Gaze', description: 'Looking at each other with love' }
         ];
 
         // DOM Elements

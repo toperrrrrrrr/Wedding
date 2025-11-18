@@ -556,13 +556,16 @@
     function updatePlayButton(showPlay) {
         // Check if playBtn exists (it won't for iframe videos)
         if (!playBtn) return;
-        
+
+        // Additional safety check - ensure playBtn is a valid DOM element
+        if (!playBtn || typeof playBtn.querySelector !== 'function') return;
+
         const playIcon = playBtn.querySelector('.play-icon');
         const pauseIcon = playBtn.querySelector('.pause-icon');
-        
-        // Check if icons exist
+
+        // Check if icons exist (they won't for iframe videos)
         if (!playIcon || !pauseIcon) return;
-        
+
         if (showPlay) {
             playIcon.style.display = 'inline';
             pauseIcon.style.display = 'none';
@@ -678,24 +681,16 @@
         // Stop timer
         stopVideoSectionTimer();
         
-        // Mute and reset volume
+        // Keep audio unmuted - don't mute when exiting video section
         const videoElement = getVideoElement();
         if (videoElement) {
             try {
-                if (videoElement.tagName === 'IFRAME') {
-                    // Vimeo iframe - modify src to mute when leaving video section
-                    const currentSrc = videoElement.src;
-                    if (currentSrc.includes('muted=0')) {
-                        const newSrc = currentSrc.replace('muted=0', 'muted=1');
-                        videoElement.src = newSrc;
-                        console.log('Vimeo iframe muted when exiting video section');
-                    }
-                } else {
-                    // Regular HTML5 video element
-                    videoElement.muted = true;
+                if (videoElement.tagName !== 'IFRAME') {
+                    // For regular HTML5 video elements, keep volume at base level
                     videoElement.volume = baseVolume;
-                    console.log('Video muted and volume reset');
+                    console.log('Video volume reset to base level (keeping audio enabled)');
                 }
+                // Vimeo iframe keeps its current mute state (unmuted)
             } catch (error) {
                 console.warn('Error setting video properties in exitVideoSection:', error.message);
             }
